@@ -1,0 +1,3809 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Soyar Plant App API",
+    "description": "API documentation for the Soyar plant app backend services",
+    "version": "1.0.0",
+    "contact": {
+      "email": "support@soyar.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "/api",
+      "description": "API base path"
+    }
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "User management and authentication operations"
+    },
+    {
+      "name": "Subscriber",
+      "description": "Operations related to subscribers"
+    },
+    {
+      "name": "Subscription",
+      "description": "Subscription management"
+    },
+    {
+      "name": "Delivery",
+      "description": "Delivery related operations"
+    },
+    {
+      "name": "DeliveryPersonnel",
+      "description": "Operations related to delivery personnel"
+    },
+    {
+      "name": "Container",
+      "description": "Container management operations"
+    },
+    {
+      "name": "Report",
+      "description": "Reporting and analytics operations"
+    },
+    {
+      "name": "Item",
+      "description": "Item management operations"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "required": ["name", "email", "password", "role"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "User unique identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's full name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email address"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "description": "User's password",
+            "writeOnly": true
+          },
+          "phone": {
+            "type": "string",
+            "description": "User's phone number",
+            "pattern": "^[0-9]{10}$"
+          },
+          "role": {
+            "type": "string",
+            "enum": ["admin", "delivery", "subscriber"],
+            "description": "User's role in the system"
+          },
+          "isActive": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether the user is active"
+          },
+          "address": {
+            "type": "object",
+            "properties": {
+              "street": { "type": "string" },
+              "city": { "type": "string" },
+              "state": { "type": "string" },
+              "zipCode": { "type": "string" },
+              "coordinates": {
+                "type": "object",
+                "properties": {
+                  "lat": { "type": "number" },
+                  "lng": { "type": "number" }
+                }
+              }
+            }
+          },
+          "zone": {
+            "type": "string",
+            "description": "Delivery zone assignment"
+          },
+          "profilePicture": {
+            "type": "string",
+            "description": "URL to user's profile picture"
+          }
+        }
+      },
+      "Subscriber": {
+        "type": "object",
+        "required": ["userId", "address", "subscriptionType"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Subscriber unique identifier"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Reference to the User"
+          },
+          "name": {
+            "type": "string",
+            "description": "Subscriber's name"
+          },
+          "mobile": {
+            "type": "string",
+            "description": "Subscriber's mobile number"
+          },
+          "address": {
+            "type": "string",
+            "description": "Subscriber's address"
+          },
+          "fullAddress": {
+            "type": "object",
+            "properties": {
+              "street": { "type": "string" },
+              "apartment": { "type": "string" },
+              "landmark": { "type": "string" },
+              "city": { "type": "string" },
+              "state": { "type": "string" },
+              "zipCode": { "type": "string" },
+              "coordinates": {
+                "type": "object",
+                "properties": {
+                  "lat": { "type": "number" },
+                  "lng": { "type": "number" }
+                }
+              }
+            }
+          },
+          "zone": {
+            "type": "string",
+            "description": "Delivery zone"
+          },
+          "subscriptionType": {
+            "type": "string",
+            "enum": ["daily", "weekly"],
+            "description": "Type of subscription"
+          },
+          "deliveryDays": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+            },
+            "description": "Days for delivery"
+          },
+          "preferredTimeSlot": {
+            "type": "string",
+            "description": "Preferred time for delivery"
+          }
+        }
+      },
+      "Subscription": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Subscription unique identifier"
+          },
+          "subscriberId": {
+            "type": "string",
+            "description": "Reference to the Subscriber"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "itemId": { "type": "string" },
+                "quantity": { "type": "number" },
+                "frequency": { "type": "string" }
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "paused", "cancelled"],
+            "default": "active"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "DeliveryPersonnel": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Delivery personnel unique identifier"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Reference to the User"
+          },
+          "zone": {
+            "type": "string",
+            "description": "Assigned delivery zone"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["available", "on-delivery", "off-duty"],
+            "default": "available"
+          },
+          "ratings": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 5
+          }
+        }
+      },
+      "Delivery": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Delivery unique identifier"
+          },
+          "subscriberId": {
+            "type": "string",
+            "description": "Reference to the Subscriber"
+          },
+          "personnelId": {
+            "type": "string",
+            "description": "Reference to the Delivery Personnel"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "itemId": { "type": "string" },
+                "quantity": { "type": "number" }
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": ["scheduled", "in-progress", "completed", "failed"],
+            "default": "scheduled"
+          },
+          "scheduledDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Container": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Container unique identifier"
+          },
+          "serialNumber": {
+            "type": "string",
+            "description": "Serial number of the container"
+          },
+          "qrCode": {
+            "type": "string",
+            "description": "QR code identifier for the container"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of container"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["in-stock", "with-subscriber", "in-transit-to-subscriber", "in-transit-to-warehouse", "returned", "lost", "under-maintenance"],
+            "default": "in-stock",
+            "description": "Current status of the container"
+          },
+          "condition": {
+            "type": "string",
+            "enum": ["new", "good", "damaged", "unusable"],
+            "default": "good",
+            "description": "Physical condition of the container"
+          },
+          "subscriberId": {
+            "type": "string",
+            "description": "Reference to the Subscriber holding the container"
+          },
+          "deliveryId": {
+            "type": "string",
+            "description": "Reference to the delivery that included this container"
+          },
+          "returnDeliveryId": {
+            "type": "string",
+            "description": "Reference to the return delivery for this container"
+          },
+          "subscriptionId": {
+            "type": "string",
+            "description": "Reference to the subscription associated with this container"
+          },
+          "itemId": {
+            "type": "string",
+            "description": "Reference to the item stored in this container"
+          },
+          "assignedDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date when the container was assigned to a subscriber"
+          },
+          "returnDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date when the container was returned"
+          },
+          "maintenanceHistory": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "notes": {
+                  "type": "string"
+                },
+                "performedBy": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "History of maintenance activities"
+          },
+          "depositCollected": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether a deposit was collected for this container"
+          },
+          "depositAmount": {
+            "type": "number",
+            "description": "Amount of deposit collected"
+          },
+          "depositRefunded": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether the deposit was refunded"
+          },
+          "statusHistory": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedBy": {
+                  "type": "string"
+                },
+                "notes": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "History of status changes"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Item": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Item unique identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the item"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the item"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category of the item"
+          },
+          "price": {
+            "type": "number",
+            "description": "Price of the item"
+          },
+          "image": {
+            "type": "string",
+            "description": "URL to the item's image"
+          },
+          "available": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether the item is available"
+          }
+        }
+      },
+      "Report": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Report unique identifier"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["delivery", "subscription", "user", "financial"],
+            "description": "Type of report"
+          },
+          "dateRange": {
+            "type": "object",
+            "properties": {
+              "start": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "end": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "data": {
+            "type": "object",
+            "description": "Report data content"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "LoginCredentials": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/users/login": {
+      "post": {
+        "tags": ["User"],
+        "summary": "User login",
+        "description": "Authenticate a user and get a token",
+        "operationId": "userLogin",
+        "requestBody": {
+          "description": "Login credentials",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginCredentials"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get all users",
+        "description": "Retrieve a list of all users",
+        "operationId": "findAllUsers",
+        "responses": {
+          "200": {
+            "description": "A list of users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["User"],
+        "summary": "Create user",
+        "description": "Create a new user",
+        "operationId": "createUser",
+        "requestBody": {
+          "description": "User object to be created",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get user by ID",
+        "description": "Returns a single user",
+        "operationId": "getUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of user to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["User"],
+        "summary": "Update user",
+        "description": "Update an existing user",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of user to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Updated user object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["User"],
+        "summary": "Delete user",
+        "description": "Delete a user",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of user to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subscriber": {
+      "get": {
+        "tags": ["Subscriber"],
+        "summary": "Get all subscribers",
+        "description": "Retrieve a list of all subscribers",
+        "operationId": "findAllSubscribers",
+        "responses": {
+          "200": {
+            "description": "A list of subscribers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Subscriber"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Subscriber"],
+        "summary": "Create subscriber",
+        "description": "Create a new subscriber",
+        "operationId": "createSubscriber",
+        "requestBody": {
+          "description": "Subscriber object to be created",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subscriber"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Subscriber created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscriber"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/delivery": {
+      "get": {
+        "tags": ["Delivery"],
+        "summary": "Get all deliveries",
+        "description": "Retrieve a list of all deliveries",
+        "operationId": "findAllDeliveries",
+        "responses": {
+          "200": {
+            "description": "A list of deliveries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Delivery"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Delivery"],
+        "summary": "Create delivery",
+        "description": "Create a new delivery",
+        "operationId": "createDelivery",
+        "requestBody": {
+          "description": "Delivery object to be created",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Delivery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Delivery created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Delivery"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get all containers",
+        "description": "Retrieve a list of all containers",
+        "operationId": "findAllContainers",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "A list of containers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Container"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Container"],
+        "summary": "Create container",
+        "description": "Create a new container",
+        "operationId": "createContainer",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "description": "Container object to be created",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Container"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Container created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/listing": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get admin container listing",
+        "description": "Retrieve aggregated container information for admin view",
+        "operationId": "aggregateContainers",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Aggregated container data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/bulk": {
+      "post": {
+        "tags": ["Container"],
+        "summary": "Bulk create containers",
+        "description": "Create multiple containers at once",
+        "operationId": "bulkCreateContainers",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "description": "Array of container objects to be created",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Containers created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Container"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/bulk/return": {
+      "put": {
+        "tags": ["Container"],
+        "summary": "Bulk update containers as returned",
+        "description": "Mark multiple containers as returned in one operation",
+        "operationId": "bulkUpdateContainersAsReturned",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "description": "Array of container IDs to mark as returned",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "containerIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Containers updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "count": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/bulk/lost": {
+      "put": {
+        "tags": ["Container"],
+        "summary": "Bulk mark containers as lost",
+        "description": "Mark multiple containers as lost in one operation",
+        "operationId": "bulkMarkContainersAsLost",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "description": "Array of container IDs to mark as lost",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "containerIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Containers marked as lost successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "count": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/search": {
+      "post": {
+        "tags": ["Container"],
+        "summary": "Search containers",
+        "description": "Search for containers based on various criteria",
+        "operationId": "searchContainers",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "description": "Search criteria",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "serialNumber": {
+                    "type": "string"
+                  },
+                  "qrCode": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "subscriberId": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Container"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/subscriber/{subscriberId}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get containers by subscriber ID",
+        "description": "Retrieve all containers assigned to a specific subscriber",
+        "operationId": "getContainersBySubscriberId",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "subscriberId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the subscriber",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of containers for the subscriber",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Container"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subscriber not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/subscriber/{subscriberId}/stats": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get container statistics for a subscriber",
+        "description": "Retrieve statistics about containers for a specific subscriber",
+        "operationId": "getContainerStatsBySubscriber",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "subscriberId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the subscriber",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Container statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "type": "integer"
+                    },
+                    "withSubscriber": {
+                      "type": "integer"
+                    },
+                    "returned": {
+                      "type": "integer"
+                    },
+                    "lost": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subscriber not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/report": {
+      "get": {
+        "tags": ["Report"],
+        "summary": "Get reports",
+        "description": "Retrieve reports based on filters",
+        "operationId": "getReports",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Type of report",
+            "schema": {
+              "type": "string",
+              "enum": ["delivery", "subscription", "user", "financial"]
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Start date for report data",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "End date for report data",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reports retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Report"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Report"],
+        "summary": "Generate report",
+        "description": "Generate a new report",
+        "operationId": "generateReport",
+        "requestBody": {
+          "description": "Report parameters",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["delivery", "subscription", "user", "financial"]
+                  },
+                  "dateRange": {
+                    "type": "object",
+                    "properties": {
+                      "start": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "end": {
+                        "type": "string",
+                        "format": "date"
+                      }
+                    }
+                  },
+                  "filters": {
+                    "type": "object",
+                    "description": "Additional filters for report"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Report generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Report"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/item": {
+      "get": {
+        "tags": ["Item"],
+        "summary": "Get all items",
+        "description": "Retrieve a list of all items",
+        "operationId": "findAllItems",
+        "responses": {
+          "200": {
+            "description": "A list of items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Item"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Item"],
+        "summary": "Create item",
+        "description": "Create a new item",
+        "operationId": "createItem",
+        "requestBody": {
+          "description": "Item object to be created",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Item"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Item created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Item"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/subscriber/{subscriberId}/status/{status}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get containers by subscriber ID and status",
+        "description": "Retrieve containers for a specific subscriber filtered by status",
+        "operationId": "getContainersBySubscriberIdAndStatus",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "subscriberId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the subscriber",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "description": "Container status to filter by",
+            "schema": {
+              "type": "string",
+              "enum": ["in-stock", "with-subscriber", "in-transit-to-subscriber", "in-transit-to-warehouse", "returned", "lost", "under-maintenance"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of filtered containers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Container"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subscriber not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/subscriber/{subscriberId}/status/{status}/count": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Count containers by subscriber and status",
+        "description": "Get the count of containers for a specific subscriber filtered by status",
+        "operationId": "countContainersBySubscriberAndStatus",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "subscriberId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the subscriber",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "description": "Container status to filter by",
+            "schema": {
+              "type": "string",
+              "enum": ["in-stock", "with-subscriber", "in-transit-to-subscriber", "in-transit-to-warehouse", "returned", "lost", "under-maintenance"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Count of filtered containers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subscriber not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/delivery/{deliveryId}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get containers by delivery ID",
+        "description": "Retrieve all containers associated with a specific delivery",
+        "operationId": "getContainersByDeliveryId",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "deliveryId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the delivery",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of containers for the delivery",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Container"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Delivery not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/return-delivery/{returnDeliveryId}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get containers by return delivery ID",
+        "description": "Retrieve all containers associated with a specific return delivery",
+        "operationId": "getContainersByReturnDeliveryId",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "returnDeliveryId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the return delivery",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of containers for the return delivery",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Container"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Return delivery not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/subscription/{subscriptionId}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get containers by subscription ID",
+        "description": "Retrieve all containers associated with a specific subscription",
+        "operationId": "getContainersBySubscriptionId",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the subscription",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of containers for the subscription",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Container"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subscription not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/item/{itemId}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get containers by item ID",
+        "description": "Retrieve all containers associated with a specific item",
+        "operationId": "getContainersByItemId",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the item",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of containers for the item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Container"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Item not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/serial/{serialNumber}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get container by serial number",
+        "description": "Retrieve container by its serial number",
+        "operationId": "getContainersBySerialNumber",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "serialNumber",
+            "in": "path",
+            "required": true,
+            "description": "Serial number of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Container with matching serial number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/qr/{qrCode}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get container by QR code",
+        "description": "Retrieve container by its QR code",
+        "operationId": "getContainersByQrCode",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "qrCode",
+            "in": "path",
+            "required": true,
+            "description": "QR code of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Container with matching QR code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/status/{status}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get containers by status",
+        "description": "Retrieve all containers with a specific status",
+        "operationId": "getContainersByStatus",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "description": "Status of the containers to retrieve",
+            "schema": {
+              "type": "string",
+              "enum": ["in-stock", "with-subscriber", "in-transit-to-subscriber", "in-transit-to-warehouse", "returned", "lost", "under-maintenance"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of containers with the specified status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Container"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/condition/{condition}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get containers by condition",
+        "description": "Retrieve all containers with a specific condition",
+        "operationId": "getContainersByCondition",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "condition",
+            "in": "path",
+            "required": true,
+            "description": "Physical condition of the containers to retrieve",
+            "schema": {
+              "type": "string",
+              "enum": ["new", "good", "damaged", "unusable"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of containers with the specified condition",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Container"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/created-after/{date}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get containers created after date",
+        "description": "Retrieve all containers created after a specific date",
+        "operationId": "getContainersCreatedAfterDate",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "description": "ISO date string (YYYY-MM-DD)",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of containers created after the specified date",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Container"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid date format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/overdue/{days}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Find overdue containers",
+        "description": "Find containers that haven't been returned within the specified number of days",
+        "operationId": "findOverdueContainers",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "days",
+            "in": "path",
+            "required": true,
+            "description": "Number of days to consider a container overdue",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of overdue containers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Container"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid number of days",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/stats/admin/{adminId}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get container statistics by admin",
+        "description": "Retrieve container statistics for a specific admin",
+        "operationId": "getContainerStatsByAdmin",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the admin",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Container statistics for the admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalContainers": {
+                      "type": "integer"
+                    },
+                    "inStock": {
+                      "type": "integer"
+                    },
+                    "withSubscribers": {
+                      "type": "integer"
+                    },
+                    "inTransit": {
+                      "type": "integer"
+                    },
+                    "lost": {
+                      "type": "integer"
+                    },
+                    "underMaintenance": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Admin not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/stats/condition/{adminId}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get container statistics by condition",
+        "description": "Retrieve statistics about container conditions for a specific admin",
+        "operationId": "getContainerStatsByCondition",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the admin",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Container condition statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "new": {
+                      "type": "integer"
+                    },
+                    "good": {
+                      "type": "integer"
+                    },
+                    "damaged": {
+                      "type": "integer"
+                    },
+                    "unusable": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Admin not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/inventory/{adminId}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get container inventory summary",
+        "description": "Retrieve a summary of container inventory for a specific admin",
+        "operationId": "getContainerInventorySummary",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the admin",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Container inventory summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalContainers": {
+                      "type": "integer"
+                    },
+                    "availableContainers": {
+                      "type": "integer"
+                    },
+                    "containersByType": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Admin not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/deposits/{adminId}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get deposit statistics",
+        "description": "Retrieve statistics about container deposits for a specific admin",
+        "operationId": "getDepositStatistics",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the admin",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deposit statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalDepositsCollected": {
+                      "type": "number"
+                    },
+                    "totalDepositsRefunded": {
+                      "type": "number"
+                    },
+                    "pendingDeposits": {
+                      "type": "number"
+                    },
+                    "lostDepositRevenue": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Admin not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId1}": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get container by ID",
+        "description": "Retrieve a container by its ID",
+        "operationId": "getContainerById",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container to retrieve",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Container details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Container"],
+        "summary": "Delete container",
+        "description": "Delete a container by its ID",
+        "operationId": "deleteContainer",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Container deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/history": {
+      "get": {
+        "tags": ["Container"],
+        "summary": "Get container status history",
+        "description": "Retrieve the status history of a container",
+        "operationId": "getStatusHistory",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Container status history",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "status": {
+                        "type": "string"
+                      },
+                      "date": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedBy": {
+                        "type": "string"
+                      },
+                      "notes": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/status": {
+      "put": {
+        "tags": ["Container"],
+        "summary": "Update container status",
+        "description": "Update the status of a container",
+        "operationId": "updateContainerStatus",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "New status information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["status"],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": ["in-stock", "with-subscriber", "in-transit-to-subscriber", "in-transit-to-warehouse", "returned", "lost", "under-maintenance"]
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Container status updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/assign": {
+      "put": {
+        "tags": ["Container"],
+        "summary": "Assign container to subscriber",
+        "description": "Assign a container to a specific subscriber",
+        "operationId": "assignToSubscriber",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Assignment information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["subscriberId"],
+                "properties": {
+                  "subscriberId": {
+                    "type": "string"
+                  },
+                  "deliveryId": {
+                    "type": "string"
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Container assigned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container or subscriber not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/transit-out": {
+      "put": {
+        "tags": ["Container"],
+        "summary": "Mark container as in transit to subscriber",
+        "description": "Mark a container as in transit to the subscriber",
+        "operationId": "markInTransitToSubscriber",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Transit information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "deliveryId": {
+                    "type": "string"
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Container marked as in transit successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/with-subscriber": {
+      "put": {
+        "tags": ["Container"],
+        "summary": "Mark container as with subscriber",
+        "description": "Mark a container as being with the subscriber",
+        "operationId": "markWithSubscriber",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Additional information",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Container marked as with subscriber successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/transit-in": {
+      "put": {
+        "tags": ["Container"],
+        "summary": "Mark container as in transit to warehouse",
+        "description": "Mark a container as in transit back to the warehouse",
+        "operationId": "markInTransitToWarehouse",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Transit information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "returnDeliveryId": {
+                    "type": "string"
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Container marked as in transit to warehouse successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/returned": {
+      "put": {
+        "tags": ["Container"],
+        "summary": "Mark container as returned",
+        "description": "Mark a container as returned to the warehouse",
+        "operationId": "markReturned",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Return information",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "condition": {
+                    "type": "string",
+                    "enum": ["new", "good", "damaged", "unusable"]
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Container marked as returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/maintenance": {
+      "post": {
+        "tags": ["Container"],
+        "summary": "Record container maintenance",
+        "description": "Record a maintenance activity for a container",
+        "operationId": "recordMaintenance",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Maintenance information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["type"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "description": "Type of maintenance performed"
+                  },
+                  "notes": {
+                    "type": "string",
+                    "description": "Detailed notes about the maintenance"
+                  },
+                  "performedBy": {
+                    "type": "string",
+                    "description": "ID of the person who performed the maintenance"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Maintenance recorded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/cleaned": {
+      "put": {
+        "tags": ["Container"],
+        "summary": "Mark container as cleaned",
+        "description": "Mark a container as cleaned and ready for reuse",
+        "operationId": "markCleaned",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cleaning information",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "notes": {
+                    "type": "string"
+                  },
+                  "cleanedBy": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Container marked as cleaned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/condition": {
+      "put": {
+        "tags": ["Container"],
+        "summary": "Update container condition",
+        "description": "Update the physical condition of a container",
+        "operationId": "updateCondition",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Condition information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["condition"],
+                "properties": {
+                  "condition": {
+                    "type": "string",
+                    "enum": ["new", "good", "damaged", "unusable"]
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Container condition updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid condition",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/under-maintenance": {
+      "put": {
+        "tags": ["Container"],
+        "summary": "Mark container as under maintenance",
+        "description": "Mark a container as being under maintenance",
+        "operationId": "markUnderMaintenance",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Maintenance information",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "notes": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Container marked as under maintenance successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/inventory": {
+      "put": {
+        "tags": ["Container"],
+        "summary": "Mark container as back in inventory",
+        "description": "Mark a container as being back in inventory",
+        "operationId": "markInInventory",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Inventory information",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "notes": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Container marked as in inventory successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/deposit/collect": {
+      "put": {
+        "tags": ["Container"],
+        "summary": "Mark container deposit as collected",
+        "description": "Mark a container's deposit as collected",
+        "operationId": "markDepositCollected",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Deposit information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["amount"],
+                "properties": {
+                  "amount": {
+                    "type": "number",
+                    "description": "Amount of deposit collected"
+                  },
+                  "collectedBy": {
+                    "type": "string",
+                    "description": "ID of the person who collected the deposit"
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Container deposit marked as collected successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid deposit information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/deposit/refund": {
+      "put": {
+        "tags": ["Container"],
+        "summary": "Mark container deposit as refunded",
+        "description": "Mark a container's deposit as refunded",
+        "operationId": "markDepositRefunded",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Refund information",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refundedBy": {
+                    "type": "string",
+                    "description": "ID of the person who processed the refund"
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Container deposit marked as refunded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/lost": {
+      "put": {
+        "tags": ["Container"],
+        "summary": "Mark container as lost",
+        "description": "Mark a container as lost or missing",
+        "operationId": "markLost",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "containerId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the container",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Lost information",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "description": "Reason for marking as lost"
+                  },
+                  "reportedBy": {
+                    "type": "string",
+                    "description": "ID of the person who reported it lost"
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Container marked as lost successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Container not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

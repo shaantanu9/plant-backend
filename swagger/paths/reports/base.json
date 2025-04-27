@@ -1,0 +1,5 @@
+{
+  "tags": ["Reports"],
+  "summary": "Report Management API",
+  "description": "Endpoints for generating and managing reports"
+} 

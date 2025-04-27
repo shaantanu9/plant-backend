@@ -1,0 +1,230 @@
+{
+  "get": {
+    "tags": ["Admin"],
+    "summary": "Get all admins",
+    "description": "Retrieves a list of all administrators in the system",
+    "operationId": "getAdmins",
+    "security": [
+      {
+        "BearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "name": "page",
+        "in": "query",
+        "description": "Page number",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "description": "Number of items per page",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "description": "Field to sort by",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["name", "email", "role", "createdAt", "updatedAt"],
+          "default": "createdAt"
+        }
+      },
+      {
+        "name": "order",
+        "in": "query",
+        "description": "Sort order",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["asc", "desc"],
+          "default": "desc"
+        }
+      },
+      {
+        "name": "role",
+        "in": "query",
+        "description": "Filter by admin role",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["admin", "superadmin"]
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Successful operation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Admin"
+                  }
+                },
+                "pagination": {
+                  "$ref": "#/components/schemas/Pagination"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Insufficient permissions",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "post": {
+    "tags": ["Admin"],
+    "summary": "Create a new admin",
+    "description": "Creates a new administrator in the system (requires superadmin privileges)",
+    "operationId": "createAdmin",
+    "security": [
+      {
+        "BearerAuth": []
+      }
+    ],
+    "requestBody": {
+      "description": "Admin object that needs to be added to the system",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["name", "email", "password", "role"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Admin User"
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "example": "admin@example.com"
+              },
+              "password": {
+                "type": "string",
+                "format": "password",
+                "minLength": 8,
+                "example": "securepassword123"
+              },
+              "phone": {
+                "type": "string",
+                "example": "+1234567890"
+              },
+              "role": {
+                "type": "string",
+                "enum": ["admin", "superadmin"],
+                "example": "admin"
+              },
+              "permissions": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "manage_users",
+                    "manage_admins",
+                    "manage_containers",
+                    "manage_deliveries",
+                    "view_analytics",
+                    "manage_settings",
+                    "manage_billing"
+                  ]
+                },
+                "example": ["manage_users", "manage_containers"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": {
+        "description": "Admin created successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Admin"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Invalid input",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Insufficient permissions (requires superadmin)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "409": {
+        "description": "Email already in use",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

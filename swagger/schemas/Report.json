@@ -1,0 +1,155 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "example": "550e8400-e29b-41d4-a716-446655440020"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["daily", "weekly", "monthly", "custom"],
+      "description": "Type of report",
+      "example": "daily"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date for which the report was generated",
+      "example": "2023-06-15"
+    },
+    "adminId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "ID of the admin who generated the report",
+      "example": "550e8400-e29b-41d4-a716-446655440001"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["generated", "draft", "archived"],
+      "description": "Status of the report",
+      "example": "generated"
+    },
+    "metrics": {
+      "type": "object",
+      "description": "Various metrics included in the report",
+      "properties": {
+        "containersDelivered": {
+          "type": "integer",
+          "description": "Number of containers delivered during this period",
+          "example": 150
+        },
+        "containersReturned": {
+          "type": "integer",
+          "description": "Number of containers returned during this period",
+          "example": 120
+        },
+        "returnRate": {
+          "type": "number",
+          "format": "float",
+          "description": "Container return rate as a percentage",
+          "example": 80.0
+        },
+        "pendingContainers": {
+          "type": "integer",
+          "description": "Number of containers pending return",
+          "example": 30
+        },
+        "deliveriesCompleted": {
+          "type": "integer",
+          "description": "Number of deliveries completed during this period",
+          "example": 85
+        },
+        "activeSubscriptions": {
+          "type": "integer",
+          "description": "Number of active subscriptions during this period",
+          "example": 95
+        },
+        "revenue": {
+          "type": "number",
+          "format": "float",
+          "description": "Revenue generated during this period",
+          "example": 4250.75
+        }
+      }
+    },
+    "subscribers": {
+      "type": "array",
+      "description": "List of subscribers included in the report",
+      "items": {
+        "type": "object",
+        "properties": {
+          "subscriberId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the subscriber",
+            "example": "550e8400-e29b-41d4-a716-446655440003"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the subscriber",
+            "example": "John Doe"
+          },
+          "containersHeld": {
+            "type": "integer",
+            "description": "Number of containers held by the subscriber",
+            "example": 5
+          },
+          "returnRate": {
+            "type": "number",
+            "format": "float",
+            "description": "Container return rate for this subscriber",
+            "example": 90.5
+          },
+          "deliveriesReceived": {
+            "type": "integer",
+            "description": "Number of deliveries received by this subscriber",
+            "example": 12
+          },
+          "amountSpent": {
+            "type": "number",
+            "format": "float",
+            "description": "Amount spent by this subscriber",
+            "example": 350.25
+          }
+        }
+      }
+    },
+    "dateRange": {
+      "type": "object",
+      "description": "Date range covered by the report",
+      "properties": {
+        "from": {
+          "type": "string",
+          "format": "date",
+          "description": "Start date of the report period",
+          "example": "2023-06-01"
+        },
+        "to": {
+          "type": "string",
+          "format": "date",
+          "description": "End date of the report period",
+          "example": "2023-06-30"
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes for the report",
+      "example": "Higher than usual return rate this month due to new incentive program."
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the report was created",
+      "example": "2023-07-01T10:00:00Z"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the report was last updated",
+      "example": "2023-07-01T15:30:00Z"
+    }
+  },
+  "required": ["id", "type", "date", "adminId", "status", "metrics", "createdAt", "updatedAt"]
+} 

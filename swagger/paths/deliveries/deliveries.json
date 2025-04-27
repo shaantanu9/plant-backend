@@ -1,0 +1,79 @@
+{
+  "post": {
+    "tags": ["Delivery"],
+    "summary": "Create a new delivery",
+    "description": "Create a new delivery record",
+    "operationId": "createDelivery",
+    "security": [{ "BearerAuth": [] }],
+    "requestBody": {
+      "description": "Delivery information",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["scheduledDate", "personnelId"],
+            "properties": {
+              "scheduledDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Scheduled date and time for the delivery"
+              },
+              "personnelId": {
+                "type": "string",
+                "description": "ID of the delivery personnel assigned to this delivery"
+              },
+              "subscriptions": {
+                "type": "array",
+                "description": "Optional list of subscription IDs to include in this delivery",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "notes": {
+                "type": "string",
+                "description": "Additional notes about the delivery"
+              },
+              "routeOrder": {
+                "type": "integer",
+                "description": "Order of this delivery in the route"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": {
+        "description": "Delivery created successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Delivery"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Invalid input",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

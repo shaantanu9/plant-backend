@@ -1,0 +1,59 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Container Management API",
+    "version": "1.0.0",
+    "description": "API for container management and tracking"
+  },
+  "servers": [
+    {
+      "url": "/api/v1",
+      "description": "Development server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Container",
+      "description": "Container management operations"
+    },
+    {
+      "name": "Delivery",
+      "description": "Delivery management operations"
+    },
+    {
+      "name": "DeliveryPersonnel",
+      "description": "Delivery personnel management operations"
+    },
+    {
+      "name": "User",
+      "description": "User operations"
+    },
+    {
+      "name": "Admin",
+      "description": "Admin operations"
+    },
+    {
+      "name": "Analytics",
+      "description": "Analytics operations"
+    },
+    {
+      "name": "Subscriber",
+      "description": "Subscriber management operations"
+    },
+    {
+      "name": "Subscription",
+      "description": "Subscription management operations"
+    }
+  ],
+  "paths": {
+    "$ref": "./paths/index.json"
+  },
+  "components": {
+    "schemas": {
+      "$ref": "./schemas/index.json"
+    },
+    "securitySchemes": {
+      "$ref": "./security/security.json"
+    }
+  }
+} 

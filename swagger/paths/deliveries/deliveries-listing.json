@@ -1,0 +1,179 @@
+{
+  "get": {
+    "tags": ["Delivery", "Analytics"],
+    "summary": "Get delivery listing",
+    "description": "Retrieve an aggregated list of deliveries with filtering options",
+    "operationId": "aggregateDeliveries",
+    "security": [{ "BearerAuth": [] }],
+    "parameters": [
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number for pagination",
+        "schema": {
+          "type": "integer",
+          "default": 1,
+          "minimum": 1
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "Number of items per page",
+        "schema": {
+          "type": "integer",
+          "default": 10,
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Field to sort by",
+        "schema": {
+          "type": "string",
+          "enum": ["scheduledDate", "status", "createdAt", "updatedAt"],
+          "default": "scheduledDate"
+        }
+      },
+      {
+        "name": "order",
+        "in": "query",
+        "required": false,
+        "description": "Sort order",
+        "schema": {
+          "type": "string",
+          "enum": ["asc", "desc"],
+          "default": "desc"
+        }
+      },
+      {
+        "name": "fromDate",
+        "in": "query",
+        "required": false,
+        "description": "Filter deliveries from this date (ISO format)",
+        "schema": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      {
+        "name": "toDate",
+        "in": "query",
+        "required": false,
+        "description": "Filter deliveries until this date (ISO format)",
+        "schema": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      {
+        "name": "status",
+        "in": "query",
+        "required": false,
+        "description": "Filter by delivery status",
+        "schema": {
+          "type": "string",
+          "enum": ["pending", "in_transit", "delivered", "partial", "canceled", "missed"]
+        }
+      },
+      {
+        "name": "personnelId",
+        "in": "query",
+        "required": false,
+        "description": "Filter by delivery personnel ID",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Successful operation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Delivery"
+                  }
+                },
+                "pagination": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of deliveries matching filters"
+                    },
+                    "page": {
+                      "type": "integer",
+                      "description": "Current page number"
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "description": "Number of items per page"
+                    },
+                    "totalPages": {
+                      "type": "integer",
+                      "description": "Total number of pages"
+                    }
+                  }
+                },
+                "summary": {
+                  "type": "object",
+                  "properties": {
+                    "pending": {
+                      "type": "integer",
+                      "description": "Number of pending deliveries"
+                    },
+                    "inTransit": {
+                      "type": "integer",
+                      "description": "Number of in-transit deliveries"
+                    },
+                    "delivered": {
+                      "type": "integer",
+                      "description": "Number of delivered deliveries"
+                    },
+                    "partial": {
+                      "type": "integer",
+                      "description": "Number of partially completed deliveries"
+                    },
+                    "canceled": {
+                      "type": "integer",
+                      "description": "Number of canceled deliveries"
+                    },
+                    "missed": {
+                      "type": "integer",
+                      "description": "Number of missed deliveries"
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of deliveries"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

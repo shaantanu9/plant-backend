@@ -1,0 +1,641 @@
+{
+  "/subscriptions/bulk/status": {
+    "put": {
+      "tags": ["Subscriptions"],
+      "summary": "Bulk update status",
+      "description": "Updates the status of multiple subscriptions at once",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["subscriptions", "status"],
+              "properties": {
+                "subscriptions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "Subscription IDs"
+                  },
+                  "description": "Array of subscription IDs to update"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": ["active", "paused", "cancelled", "expired", "pending"],
+                  "description": "New status for the subscriptions"
+                },
+                "reason": {
+                  "type": "string",
+                  "description": "Reason for the status change"
+                },
+                "statusMetadata": {
+                  "type": "object",
+                  "description": "Additional metadata about the status change"
+                },
+                "filter": {
+                  "type": "object",
+                  "description": "Filter criteria (alternative to explicit subscription IDs)",
+                  "properties": {
+                    "adminId": {
+                      "type": "string",
+                      "description": "Filter by admin ID"
+                    },
+                    "itemId": {
+                      "type": "string",
+                      "description": "Filter by item ID"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["active", "paused", "cancelled", "expired", "pending"],
+                      "description": "Filter by current status"
+                    },
+                    "frequency": {
+                      "type": "string",
+                      "enum": ["daily", "weekly", "biweekly", "monthly"],
+                      "description": "Filter by delivery frequency"
+                    },
+                    "startDate": {
+                      "type": "object",
+                      "properties": {
+                        "from": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "to": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    },
+                    "endDate": {
+                      "type": "object",
+                      "properties": {
+                        "from": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "to": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Status updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "updatedCount": {
+                    "type": "integer",
+                    "description": "Number of subscriptions updated"
+                  },
+                  "failedCount": {
+                    "type": "integer",
+                    "description": "Number of subscriptions that failed to update"
+                  },
+                  "failedSubscriptions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "error": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscriptions/bulk/billing": {
+    "post": {
+      "tags": ["Subscriptions"],
+      "summary": "Bulk billing operation",
+      "description": "Process billing for multiple subscriptions at once",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "subscriptions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "Subscription IDs"
+                  },
+                  "description": "Array of subscription IDs to bill"
+                },
+                "billingDate": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Date to use for billing (defaults to current date)"
+                },
+                "sendInvoices": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Whether to send invoices to customers"
+                },
+                "filter": {
+                  "type": "object",
+                  "description": "Filter criteria (alternative to explicit subscription IDs)",
+                  "properties": {
+                    "dueDate": {
+                      "type": "object",
+                      "properties": {
+                        "from": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "to": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    },
+                    "adminId": {
+                      "type": "string",
+                      "description": "Filter by admin ID"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["active"],
+                      "description": "Filter by subscription status (only active can be billed)"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Billing processed successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "processedCount": {
+                    "type": "integer",
+                    "description": "Number of subscriptions processed"
+                  },
+                  "failedCount": {
+                    "type": "integer",
+                    "description": "Number of subscriptions that failed processing"
+                  },
+                  "totalAmount": {
+                    "type": "number",
+                    "description": "Total amount billed"
+                  },
+                  "invoices": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "subscriptionId": {
+                          "type": "string"
+                        },
+                        "invoiceId": {
+                          "type": "string"
+                        },
+                        "amount": {
+                          "type": "number"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": ["created", "sent", "failed"]
+                        }
+                      }
+                    }
+                  },
+                  "failedSubscriptions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "error": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscriptions/bulk/create": {
+    "post": {
+      "tags": ["Subscriptions"],
+      "summary": "Bulk create subscriptions",
+      "description": "Creates multiple subscriptions at once",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["subscriptions"],
+              "properties": {
+                "subscriptions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["subscriberId", "itemId", "frequency", "deliveryAddress", "deliveryTimeSlot", "deliveryDays"],
+                    "properties": {
+                      "subscriberId": {
+                        "type": "string",
+                        "description": "ID of the subscriber"
+                      },
+                      "itemId": {
+                        "type": "string",
+                        "description": "ID of the item being subscribed to"
+                      },
+                      "adminId": {
+                        "type": "string",
+                        "description": "ID of the admin managing the subscription"
+                      },
+                      "frequency": {
+                        "type": "string",
+                        "enum": ["daily", "weekly", "biweekly", "monthly"],
+                        "description": "Frequency of the subscription"
+                      },
+                      "quantity": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "default": 1,
+                        "description": "Quantity of items per delivery"
+                      },
+                      "startDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Start date of the subscription"
+                      },
+                      "endDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "End date of the subscription (null for open-ended)"
+                      },
+                      "deliveryAddress": {
+                        "type": "object",
+                        "properties": {
+                          "street": {
+                            "type": "string"
+                          },
+                          "city": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "zipCode": {
+                            "type": "string"
+                          },
+                          "country": {
+                            "type": "string",
+                            "default": "USA"
+                          },
+                          "coordinates": {
+                            "type": "object",
+                            "properties": {
+                              "latitude": {
+                                "type": "number"
+                              },
+                              "longitude": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "notes": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "deliveryTimeSlot": {
+                        "type": "object",
+                        "properties": {
+                          "from": {
+                            "type": "string",
+                            "description": "Start time in HH:MM format",
+                            "example": "09:00"
+                          },
+                          "to": {
+                            "type": "string",
+                            "description": "End time in HH:MM format",
+                            "example": "12:00"
+                          }
+                        }
+                      },
+                      "deliveryDays": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+                        }
+                      },
+                      "notes": {
+                        "type": "string",
+                        "description": "Additional notes for the subscription"
+                      }
+                    }
+                  }
+                },
+                "skipDuplicates": {
+                  "type": "boolean",
+                  "description": "Whether to skip creating duplicate subscriptions",
+                  "default": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Subscriptions created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "createdCount": {
+                    "type": "integer",
+                    "description": "Number of subscriptions created"
+                  },
+                  "skippedCount": {
+                    "type": "integer",
+                    "description": "Number of subscriptions skipped (duplicates)"
+                  },
+                  "failedCount": {
+                    "type": "integer",
+                    "description": "Number of subscriptions that failed to create"
+                  },
+                  "subscriptions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "subscriberId": {
+                          "type": "string"
+                        },
+                        "itemId": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": ["created", "skipped", "failed"]
+                        },
+                        "error": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscriptions/bulk/delete": {
+    "delete": {
+      "tags": ["Subscriptions"],
+      "summary": "Bulk delete subscriptions",
+      "description": "Deletes multiple subscriptions at once",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "subscriptions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "Subscription IDs to delete"
+                  }
+                },
+                "filter": {
+                  "type": "object",
+                  "description": "Filter criteria (alternative to explicit subscription IDs)",
+                  "properties": {
+                    "adminId": {
+                      "type": "string",
+                      "description": "Filter by admin ID"
+                    },
+                    "itemId": {
+                      "type": "string",
+                      "description": "Filter by item ID"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["cancelled", "expired"],
+                      "description": "Filter by subscription status (only cancelled or expired can be deleted)"
+                    },
+                    "endDate": {
+                      "type": "object",
+                      "properties": {
+                        "before": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Filter subscriptions that ended before this date"
+                        }
+                      }
+                    }
+                  }
+                },
+                "permanently": {
+                  "type": "boolean",
+                  "description": "Whether to permanently delete the subscriptions (hard delete)",
+                  "default": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Subscriptions deleted successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "deletedCount": {
+                    "type": "integer",
+                    "description": "Number of subscriptions deleted"
+                  },
+                  "failedCount": {
+                    "type": "integer",
+                    "description": "Number of subscriptions that failed to delete"
+                  },
+                  "failedSubscriptions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "error": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

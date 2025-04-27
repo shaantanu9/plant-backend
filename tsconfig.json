@@ -1,0 +1,61 @@
+{
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  },
+  
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "target": "ES2017",
+    "incremental": true,
+    "skipLibCheck":true,
+    "module": "commonjs",
+    "sourceMap": true,
+    "outDir": "./build",
+    "rootDir": "./src",
+    "removeComments": true,
+    "strict": false,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "alwaysStrict": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "resolveJsonModule": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "esModuleInterop": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@middleware": ["middleware/index"],
+      "@models/*": [
+          "models/*"
+      ],
+      "@controllers": ["controllers/index"],
+      "@baseController": ["controllers/base.controller"],
+      "@routes": ["routes/index"],
+      "@services": ["services/index"],
+      "@utils": ["services/utils/index"],
+      "@config": ["config/index"],
+      "@types": ["types/index"],
+      "@baseRoutes": ["routes/base.routes"],
+      "@entity": ["entity/index"],
+      "@common": [
+          "common/index"
+      ],
+      "@response": [
+          "response/index"
+      ],
+      "@builders": [
+          "builder/index"
+      ],
+      "@typings": ["typings/index"],
+  }
+  },
+  "filesGlob": [
+    "src/**/*.ts"
+  ],
+  "strictPropertyInitialization": false,
+  "allowImportingTsExtensions": true
+}

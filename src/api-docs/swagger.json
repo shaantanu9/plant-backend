@@ -1,0 +1,1103 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Cooding-Soyar API",
+    "description": "API for plant container management and delivery system",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Cooding-Soyar Support",
+      "email": "support@example.com",
+      "url": "https://example.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/v1",
+      "description": "Main API server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Container",
+      "description": "Container management operations"
+    },
+    {
+      "name": "Delivery",
+      "description": "Delivery management operations"
+    },
+    {
+      "name": "User",
+      "description": "User management operations"
+    },
+    {
+      "name": "Admin",
+      "description": "Admin operations"
+    },
+    {
+      "name": "Analytics",
+      "description": "System analytics and reporting"
+    }
+  ],
+  "paths": {
+    "/containers/stats/admin/{adminId}": {
+      "get": {
+        "tags": [
+          "Container"
+        ],
+        "summary": "Get container statistics by admin",
+        "description": "Retrieve container statistics for a specific admin",
+        "operationId": "getContainerStatsByAdmin",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the admin",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Container statistics for the admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalContainers": {
+                      "type": "integer"
+                    },
+                    "inStock": {
+                      "type": "integer"
+                    },
+                    "withSubscribers": {
+                      "type": "integer"
+                    },
+                    "inTransit": {
+                      "type": "integer"
+                    },
+                    "lost": {
+                      "type": "integer"
+                    },
+                    "underMaintenance": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "../../../schemas/Error.json"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Admin not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "../../../schemas/Error.json"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/transit-out": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/with-subscriber": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/transit-in": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/returned": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/maintenance": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/cleaned": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/condition": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/under-maintenance": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/inventory": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/deposit/collect": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/deposit/refund": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/containers/{containerId}/lost": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/efficiency/personnel": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/admin/{adminId}/date": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/admin/{adminId}/statistics": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/subscription/{subscriptionId}": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/subscriber/{subscriberId}/summary": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/personnel/{personnelId}/payment-report": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/personnel/{personnelId}/optimize-route": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/subscription": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/subscription/{subscriptionId}/fulfillment": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/container/delivered": {
+      "post": {
+        "tags": [
+          "Delivery",
+          "Container"
+        ],
+        "summary": "Add delivered container",
+        "description": "Record a container as delivered to a subscriber during a delivery",
+        "operationId": "addDeliveredContainer",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "deliveryId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the delivery",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Delivered container information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "containerId",
+                  "subscriberId"
+                ],
+                "properties": {
+                  "containerId": {
+                    "type": "string",
+                    "description": "ID of the container being delivered"
+                  },
+                  "subscriberId": {
+                    "type": "string",
+                    "description": "ID of the subscriber receiving the container"
+                  },
+                  "notes": {
+                    "type": "string",
+                    "description": "Additional notes about the delivery"
+                  },
+                  "condition": {
+                    "type": "string",
+                    "enum": [
+                      "new",
+                      "good",
+                      "damaged",
+                      "unusable"
+                    ],
+                    "description": "Condition of the container at delivery"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Container added to delivery successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Delivery"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Delivery, container, or subscriber not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/container/returned": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/container/{containerId}/condition": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/container/{containerId}/verify": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/containers/delivered/get": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/containers/returned/get": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/in-transit": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/delivered": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/partial": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/cancel": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/verification/method": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/verification/data": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/verification/signature": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/verification/photo": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/verification/code": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/payment": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/notes/subscriber": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/notes/personnel": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/notes": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/containers/delivered/update": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/containers/returned/update": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/route-order": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/deliveries/{deliveryId}/distance": {
+      "get": {
+        "description": "Placeholder for future implementation",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "UNAUTHORIZED"
+          },
+          "message": {
+            "type": "string",
+            "example": "Authentication required"
+          },
+          "details": {
+            "type": "object",
+            "nullable": true
+          }
+        }
+      },
+      "Container": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "550e8400-e29b-41d4-a716-446655440002"
+          },
+          "qrCode": {
+            "type": "string",
+            "example": "CNT-1234-5678-90AB"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "small",
+              "medium",
+              "large",
+              "specialized"
+            ],
+            "example": "medium"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "in_inventory",
+              "with_subscriber",
+              "in_transit_out",
+              "in_transit_in",
+              "under_maintenance",
+              "lost"
+            ],
+            "example": "in_inventory"
+          },
+          "condition": {
+            "type": "string",
+            "enum": [
+              "new",
+              "good",
+              "damaged",
+              "unusable"
+            ],
+            "example": "good"
+          },
+          "lastCleanedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T12:00:00Z"
+          },
+          "currentSubscriberId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "550e8400-e29b-41d4-a716-446655440003",
+            "nullable": true
+          },
+          "depositCollected": {
+            "type": "boolean",
+            "example": false
+          },
+          "depositAmount": {
+            "type": "number",
+            "format": "float",
+            "example": 15
+          },
+          "maintenanceHistory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Maintenance"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T12:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T12:00:00Z"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "john.doe@example.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+1234567890"
+          },
+          "address": {
+            "type": "string",
+            "example": "123 Main St, Anytown, USA"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "admin",
+              "superadmin"
+            ],
+            "example": "user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T12:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T12:00:00Z"
+          }
+        }
+      },
+      "Admin": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "550e8400-e29b-41d4-a716-446655440001"
+          },
+          "name": {
+            "type": "string",
+            "example": "Admin User"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "admin@example.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+1234567890"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "superadmin"
+            ],
+            "example": "admin"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "manage_users",
+                "manage_admins",
+                "manage_containers",
+                "manage_deliveries",
+                "view_analytics",
+                "manage_settings",
+                "manage_billing"
+              ]
+            },
+            "example": [
+              "manage_users",
+              "manage_containers"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T12:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T12:00:00Z"
+          }
+        }
+      },
+      "Delivery": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "550e8400-e29b-41d4-a716-446655440005"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "in_transit",
+              "delivered",
+              "partial",
+              "cancelled"
+            ],
+            "example": "pending"
+          },
+          "scheduledFor": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-10T14:00:00Z"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-10T15:30:00Z",
+            "nullable": true
+          },
+          "personnelId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "550e8400-e29b-41d4-a716-446655440006",
+            "nullable": true
+          },
+          "subscriptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeliverySubscription"
+            }
+          },
+          "containersDelivered": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeliveryContainer"
+            }
+          },
+          "containersReturned": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeliveryContainer"
+            }
+          },
+          "verificationMethod": {
+            "type": "string",
+            "enum": [
+              "signature",
+              "photo",
+              "code",
+              "none"
+            ],
+            "example": "signature"
+          },
+          "verificationData": {
+            "type": "object",
+            "nullable": true
+          },
+          "distance": {
+            "type": "number",
+            "format": "float",
+            "example": 12.5
+          },
+          "routeOrder": {
+            "type": "integer",
+            "example": 5
+          },
+          "notes": {
+            "type": "string",
+            "example": "Leave at the back door if no one answers"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T12:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-10T15:30:00Z"
+          }
+        }
+      },
+      "DeliveryPersonnel": {
+        "$ref": "./DeliveryPersonnel.json"
+      },
+      "Item": {
+        "$ref": "./Item.json"
+      },
+      "Report": {
+        "$ref": "./Report.json"
+      },
+      "Subscriber": {
+        "$ref": "./Subscriber.json"
+      },
+      "DeliverySubscription": {
+        "type": "object",
+        "properties": {
+          "subscriptionId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "550e8400-e29b-41d4-a716-446655440007"
+          },
+          "subscriberId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "550e8400-e29b-41d4-a716-446655440003"
+          },
+          "fulfilled": {
+            "type": "boolean",
+            "example": true
+          },
+          "notes": {
+            "type": "string",
+            "example": "Customer requested extra containers"
+          }
+        }
+      },
+      "DeliveryContainer": {
+        "type": "object",
+        "properties": {
+          "containerId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "550e8400-e29b-41d4-a716-446655440002"
+          },
+          "verified": {
+            "type": "boolean",
+            "example": true
+          },
+          "condition": {
+            "type": "string",
+            "enum": [
+              "new",
+              "good",
+              "damaged",
+              "unusable"
+            ],
+            "example": "good"
+          },
+          "notes": {
+            "type": "string",
+            "example": "Container has minor scratches"
+          }
+        }
+      },
+      "Maintenance": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "550e8400-e29b-41d4-a716-446655440004"
+          },
+          "containerId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "550e8400-e29b-41d4-a716-446655440002"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "repair",
+              "cleaning",
+              "inspection",
+              "other"
+            ],
+            "example": "repair"
+          },
+          "notes": {
+            "type": "string",
+            "example": "Fixed broken handle"
+          },
+          "performedBy": {
+            "type": "string",
+            "format": "uuid",
+            "example": "550e8400-e29b-41d4-a716-446655440001"
+          },
+          "performedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-05T14:30:00Z"
+          }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "example": 100
+          },
+          "page": {
+            "type": "integer",
+            "example": 1
+          },
+          "limit": {
+            "type": "integer",
+            "example": 20
+          },
+          "pages": {
+            "type": "integer",
+            "example": 5
+          },
+          "hasNext": {
+            "type": "boolean",
+            "example": true
+          },
+          "hasPrev": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

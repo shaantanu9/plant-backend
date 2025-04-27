@@ -1,0 +1,219 @@
+{
+  "get": {
+    "tags": ["Analytics"],
+    "summary": "Get system analytics",
+    "description": "Retrieves analytics and statistics for the entire system",
+    "operationId": "getSystemAnalytics",
+    "security": [
+      {
+        "BearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "name": "startDate",
+        "in": "query",
+        "description": "Start date for the analytics period (ISO format)",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date",
+          "example": "2023-01-01"
+        }
+      },
+      {
+        "name": "endDate",
+        "in": "query",
+        "description": "End date for the analytics period (ISO format)",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date",
+          "example": "2023-12-31"
+        }
+      },
+      {
+        "name": "groupBy",
+        "in": "query",
+        "description": "Group analytics by time period",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["day", "week", "month", "quarter", "year"],
+          "default": "month"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Successful operation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "overview": {
+                  "type": "object",
+                  "properties": {
+                    "totalDeliveries": {
+                      "type": "integer",
+                      "example": 1250
+                    },
+                    "totalContainers": {
+                      "type": "integer",
+                      "example": 5000
+                    },
+                    "activeSubscriptions": {
+                      "type": "integer",
+                      "example": 320
+                    },
+                    "activeSubscribers": {
+                      "type": "integer",
+                      "example": 280
+                    },
+                    "totalRevenue": {
+                      "type": "number",
+                      "format": "float",
+                      "example": 25600.50
+                    },
+                    "avgDeliveryTime": {
+                      "type": "number",
+                      "format": "float",
+                      "example": 42.5
+                    }
+                  }
+                },
+                "containerStats": {
+                  "type": "object",
+                  "properties": {
+                    "totalInInventory": {
+                      "type": "integer",
+                      "example": 3200
+                    },
+                    "totalWithSubscribers": {
+                      "type": "integer",
+                      "example": 1500
+                    },
+                    "totalInTransit": {
+                      "type": "integer",
+                      "example": 280
+                    },
+                    "totalUnderMaintenance": {
+                      "type": "integer",
+                      "example": 15
+                    },
+                    "totalLost": {
+                      "type": "integer",
+                      "example": 5
+                    },
+                    "byCondition": {
+                      "type": "object",
+                      "properties": {
+                        "new": {
+                          "type": "integer",
+                          "example": 2000
+                        },
+                        "good": {
+                          "type": "integer",
+                          "example": 2500
+                        },
+                        "damaged": {
+                          "type": "integer",
+                          "example": 450
+                        },
+                        "unusable": {
+                          "type": "integer",
+                          "example": 50
+                        }
+                      }
+                    }
+                  }
+                },
+                "deliveryStats": {
+                  "type": "object",
+                  "properties": {
+                    "totalCompleted": {
+                      "type": "integer",
+                      "example": 1150
+                    },
+                    "totalPending": {
+                      "type": "integer",
+                      "example": 80
+                    },
+                    "totalInTransit": {
+                      "type": "integer",
+                      "example": 20
+                    },
+                    "totalCancelled": {
+                      "type": "integer",
+                      "example": 15
+                    },
+                    "avgContainersPerDelivery": {
+                      "type": "number",
+                      "format": "float",
+                      "example": 3.5
+                    },
+                    "avgDistancePerDelivery": {
+                      "type": "number",
+                      "format": "float",
+                      "example": 12.8
+                    }
+                  }
+                },
+                "timeSeriesData": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "period": {
+                        "type": "string",
+                        "example": "2023-01"
+                      },
+                      "deliveries": {
+                        "type": "integer",
+                        "example": 120
+                      },
+                      "revenue": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 2400.50
+                      },
+                      "newSubscribers": {
+                        "type": "integer",
+                        "example": 15
+                      },
+                      "churnedSubscribers": {
+                        "type": "integer",
+                        "example": 3
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Insufficient permissions",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

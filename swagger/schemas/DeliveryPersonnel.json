@@ -1,0 +1,226 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "example": "550e8400-e29b-41d4-a716-446655440007"
+    },
+    "userId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Reference to the associated User record",
+      "example": "550e8400-e29b-41d4-a716-446655440000"
+    },
+    "zone": {
+      "type": "string",
+      "description": "Primary delivery zone assignment",
+      "example": "Downtown"
+    },
+    "vehicleType": {
+      "type": "string",
+      "enum": ["bicycle", "motorcycle", "car", "van", "truck", "other", "bike"],
+      "description": "Type of vehicle used for deliveries",
+      "example": "motorcycle"
+    },
+    "vehicleNumber": {
+      "type": "string",
+      "description": "Registration/identification number of the vehicle",
+      "example": "MH-01-AB-1234"
+    },
+    "isActive": {
+      "type": "boolean",
+      "description": "Whether the personnel is currently active",
+      "example": true
+    },
+    "availableDays": {
+      "type": "array",
+      "description": "Days of the week when the personnel is available",
+      "items": {
+        "type": "string",
+        "enum": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+      },
+      "example": ["Mon", "Wed", "Fri"]
+    },
+    "availableTimeSlots": {
+      "type": "array",
+      "description": "Time slots when the personnel is available",
+      "items": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "string",
+            "description": "Start time in HH:MM format",
+            "example": "09:00"
+          },
+          "end": {
+            "type": "string",
+            "description": "End time in HH:MM format",
+            "example": "17:00"
+          }
+        }
+      }
+    },
+    "maxDeliveriesPerDay": {
+      "type": "integer",
+      "description": "Maximum number of deliveries the personnel can handle per day",
+      "example": 30
+    },
+    "maxWeight": {
+      "type": "number",
+      "description": "Maximum weight capacity in kg",
+      "example": 50
+    },
+    "primaryZones": {
+      "type": "array",
+      "description": "Primary service zones for this personnel",
+      "items": {
+        "type": "string"
+      },
+      "example": ["Downtown", "Midtown"]
+    },
+    "secondaryZones": {
+      "type": "array",
+      "description": "Secondary service zones for this personnel",
+      "items": {
+        "type": "string"
+      },
+      "example": ["Uptown", "Suburb"]
+    },
+    "currentLocation": {
+      "type": "object",
+      "description": "Current GPS location of the personnel",
+      "properties": {
+        "lat": {
+          "type": "number",
+          "description": "Latitude",
+          "example": 37.7749
+        },
+        "lng": {
+          "type": "number",
+          "description": "Longitude",
+          "example": -122.4194
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the location was last updated",
+          "example": "2023-01-01T12:00:00Z"
+        }
+      }
+    },
+    "assignedAdmins": {
+      "type": "array",
+      "description": "Admins this personnel works for",
+      "items": {
+        "type": "object",
+        "properties": {
+          "adminId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Reference to an admin user",
+            "example": "550e8400-e29b-41d4-a716-446655440001"
+          },
+          "isPrimary": {
+            "type": "boolean",
+            "description": "Whether this is the primary admin for the personnel",
+            "example": true
+          }
+        }
+      }
+    },
+    "assignedSubscribers": {
+      "type": "array",
+      "description": "List of subscribers assigned to this personnel",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "example": ["550e8400-e29b-41d4-a716-446655440003", "550e8400-e29b-41d4-a716-446655440004"]
+    },
+    "deliveryStats": {
+      "type": "object",
+      "description": "Performance metrics for the personnel",
+      "properties": {
+        "totalDeliveries": {
+          "type": "integer",
+          "description": "Total number of deliveries assigned",
+          "example": 150
+        },
+        "completedDeliveries": {
+          "type": "integer",
+          "description": "Number of completed deliveries",
+          "example": 140
+        },
+        "missedDeliveries": {
+          "type": "integer",
+          "description": "Number of missed deliveries",
+          "example": 10
+        },
+        "avgRating": {
+          "type": "number",
+          "description": "Average customer rating",
+          "minimum": 1,
+          "maximum": 5,
+          "example": 4.8
+        },
+        "containersDelivered": {
+          "type": "integer",
+          "description": "Total number of containers delivered",
+          "example": 450
+        },
+        "containersCollected": {
+          "type": "integer",
+          "description": "Total number of containers collected",
+          "example": 420
+        }
+      }
+    },
+    "paymentDetails": {
+      "type": "object",
+      "description": "Payment account details",
+      "properties": {
+        "accountNumber": {
+          "type": "string",
+          "description": "Bank account number",
+          "example": "123456789012"
+        },
+        "bankName": {
+          "type": "string",
+          "description": "Name of the bank",
+          "example": "Bank of America"
+        },
+        "ifscCode": {
+          "type": "string",
+          "description": "IFSC code for bank transfers",
+          "example": "BANK0001234"
+        }
+      }
+    },
+    "lastActiveAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the personnel was last active",
+      "example": "2023-01-01T12:00:00Z"
+    },
+    "joiningDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the personnel joined the platform",
+      "example": "2022-01-01T00:00:00Z"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the record was created",
+      "example": "2022-01-01T00:00:00Z"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the record was last updated",
+      "example": "2023-01-01T12:00:00Z"
+    }
+  },
+  "required": ["id", "userId", "isActive", "createdAt", "updatedAt"]
+} 

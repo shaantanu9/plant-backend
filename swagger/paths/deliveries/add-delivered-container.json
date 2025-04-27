@@ -1,0 +1,93 @@
+{
+  "post": {
+    "tags": ["Delivery", "Container"],
+    "summary": "Add delivered container",
+    "description": "Record a container as delivered to a subscriber during a delivery",
+    "operationId": "addDeliveredContainer",
+    "security": [{ "BearerAuth": [] }],
+    "parameters": [
+      {
+        "name": "deliveryId",
+        "in": "path",
+        "required": true,
+        "description": "ID of the delivery",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "requestBody": {
+      "description": "Delivered container information",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["containerId", "subscriberId"],
+            "properties": {
+              "containerId": {
+                "type": "string",
+                "description": "ID of the container being delivered"
+              },
+              "subscriberId": {
+                "type": "string",
+                "description": "ID of the subscriber receiving the container"
+              },
+              "notes": {
+                "type": "string",
+                "description": "Additional notes about the delivery"
+              },
+              "condition": {
+                "type": "string",
+                "enum": ["new", "good", "damaged", "unusable"],
+                "description": "Condition of the container at delivery"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Container added to delivery successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Delivery"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Invalid input",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Delivery, container, or subscriber not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

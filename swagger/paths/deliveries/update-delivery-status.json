@@ -1,0 +1,85 @@
+{
+  "put": {
+    "tags": ["Delivery"],
+    "summary": "Update delivery status",
+    "description": "Update the status of a delivery",
+    "operationId": "updateDeliveryStatus",
+    "security": [{ "BearerAuth": [] }],
+    "parameters": [
+      {
+        "name": "deliveryId",
+        "in": "path",
+        "required": true,
+        "description": "ID of the delivery to update",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "requestBody": {
+      "description": "Status update information",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["status"],
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": ["pending", "in_transit", "delivered", "partial", "canceled", "missed"],
+                "description": "New status for the delivery"
+              },
+              "notes": {
+                "type": "string",
+                "description": "Additional notes regarding the status change"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Status updated successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Delivery"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Invalid status",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Delivery not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

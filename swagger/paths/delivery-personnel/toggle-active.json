@@ -1,0 +1,91 @@
+{
+  "put": {
+    "tags": ["DeliveryPersonnel"],
+    "summary": "Toggle delivery personnel active status",
+    "description": "Toggle whether a delivery personnel is active or inactive",
+    "operationId": "toggleActiveStatus",
+    "security": [{ "BearerAuth": [] }],
+    "parameters": [
+      {
+        "name": "personnelId",
+        "in": "path",
+        "required": true,
+        "description": "ID of the delivery personnel",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "requestBody": {
+      "description": "Status update information",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["isActive"],
+            "properties": {
+              "isActive": {
+                "type": "boolean",
+                "description": "New active status for the personnel",
+                "example": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Status updated successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DeliveryPersonnel"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Invalid input",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Delivery personnel not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Insufficient permissions",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

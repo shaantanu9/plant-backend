@@ -1,0 +1,72 @@
+{
+  "get": {
+    "tags": ["Container"],
+    "summary": "Get container statistics by admin",
+    "description": "Retrieve container statistics for a specific admin",
+    "operationId": "getContainerStatsByAdmin",
+    "security": [{ "BearerAuth": [] }],
+    "parameters": [
+      {
+        "name": "adminId",
+        "in": "path",
+        "required": true,
+        "description": "ID of the admin",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Container statistics for the admin",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "totalContainers": {
+                  "type": "integer"
+                },
+                "inStock": {
+                  "type": "integer"
+                },
+                "withSubscribers": {
+                  "type": "integer"
+                },
+                "inTransit": {
+                  "type": "integer"
+                },
+                "lost": {
+                  "type": "integer"
+                },
+                "underMaintenance": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Admin not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../../schemas/Error.json"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../../schemas/Error.json"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

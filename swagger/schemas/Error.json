@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "integer",
+      "description": "HTTP status code"
+    },
+    "message": {
+      "type": "string",
+      "description": "Error message"
+    },
+    "details": {
+      "type": "string",
+      "description": "Detailed error information"
+    }
+  },
+  "required": ["code", "message"]
+} 

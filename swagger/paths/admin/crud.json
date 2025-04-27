@@ -1,0 +1,486 @@
+{
+  "/admin": {
+    "get": {
+      "tags": ["Admin"],
+      "summary": "Get all admins",
+      "description": "Retrieve a list of all admins in the system",
+      "operationId": "getAdmins",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "description": "Page number",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "Number of items per page",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 20
+          }
+        },
+        {
+          "name": "sort",
+          "in": "query",
+          "description": "Field to sort by",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["name", "email", "createdAt", "updatedAt"],
+            "default": "createdAt"
+          }
+        },
+        {
+          "name": "order",
+          "in": "query",
+          "description": "Sort order",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["asc", "desc"],
+            "default": "desc"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of admins retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../../schemas/Admin.json"
+                    }
+                  },
+                  "pagination": {
+                    "$ref": "../../schemas/index.json#/Pagination"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "Forbidden - Insufficient permissions",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "tags": ["Admin"],
+      "summary": "Create admin",
+      "description": "Create a new admin user",
+      "operationId": "createAdmin",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["name", "email", "password", "confirmPassword", "role"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Full name of the admin",
+                  "example": "John Doe"
+                },
+                "email": {
+                  "type": "string",
+                  "format": "email",
+                  "description": "Email address of the admin",
+                  "example": "admin@example.com"
+                },
+                "password": {
+                  "type": "string",
+                  "format": "password",
+                  "description": "Admin password",
+                  "minLength": 8,
+                  "example": "Password123!"
+                },
+                "confirmPassword": {
+                  "type": "string",
+                  "format": "password",
+                  "description": "Confirm password",
+                  "example": "Password123!"
+                },
+                "phone": {
+                  "type": "string",
+                  "description": "Phone number of the admin",
+                  "example": "+1234567890"
+                },
+                "role": {
+                  "type": "string",
+                  "enum": ["admin", "superadmin"],
+                  "description": "Role of the admin",
+                  "example": "admin"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Admin created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "Admin created successfully"
+                  },
+                  "data": {
+                    "$ref": "../../schemas/Admin.json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid input data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "Forbidden - Insufficient permissions",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "Email already in use",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/admin/{adminId}": {
+    "get": {
+      "tags": ["Admin"],
+      "summary": "Get admin by ID",
+      "description": "Retrieve a specific admin by ID",
+      "operationId": "getAdminById",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "adminId",
+          "in": "path",
+          "description": "ID of the admin to retrieve",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Admin retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "$ref": "../../schemas/Admin.json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "Forbidden - Insufficient permissions",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Admin not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["Admin"],
+      "summary": "Update admin",
+      "description": "Update an existing admin by ID",
+      "operationId": "updateAdmin",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "adminId",
+          "in": "path",
+          "description": "ID of the admin to update",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Full name of the admin",
+                  "example": "John Doe"
+                },
+                "phone": {
+                  "type": "string",
+                  "description": "Phone number of the admin",
+                  "example": "+1234567890"
+                },
+                "role": {
+                  "type": "string",
+                  "enum": ["admin", "superadmin"],
+                  "description": "Role of the admin",
+                  "example": "admin"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": ["active", "inactive", "suspended"],
+                  "description": "Status of the admin account",
+                  "example": "active"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Admin updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "Admin updated successfully"
+                  },
+                  "data": {
+                    "$ref": "../../schemas/Admin.json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid input data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "Forbidden - Insufficient permissions",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Admin not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["Admin"],
+      "summary": "Delete admin",
+      "description": "Delete an admin by ID",
+      "operationId": "deleteAdmin",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "adminId",
+          "in": "path",
+          "description": "ID of the admin to delete",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Admin deleted successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "Admin deleted successfully"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "Forbidden - Insufficient permissions",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Admin not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

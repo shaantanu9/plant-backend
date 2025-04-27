@@ -1,0 +1,239 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "example": "550e8400-e29b-41d4-a716-446655440003"
+    },
+    "userId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "ID of the associated user account",
+      "example": "550e8400-e29b-41d4-a716-446655440000"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the subscriber",
+      "example": "John Doe"
+    },
+    "mobile": {
+      "type": "string",
+      "description": "Mobile number of the subscriber",
+      "example": "+1234567890"
+    },
+    "address": {
+      "type": "string",
+      "description": "Main address of the subscriber",
+      "example": "123 Main St, Anytown, USA"
+    },
+    "fullAddress": {
+      "type": "object",
+      "description": "Detailed address information",
+      "properties": {
+        "street": {
+          "type": "string",
+          "example": "123 Main St"
+        },
+        "apartment": {
+          "type": "string",
+          "example": "Apt 4B"
+        },
+        "landmark": {
+          "type": "string",
+          "example": "Near City Park"
+        },
+        "city": {
+          "type": "string",
+          "example": "Anytown"
+        },
+        "state": {
+          "type": "string",
+          "example": "CA"
+        },
+        "zipCode": {
+          "type": "string",
+          "example": "12345"
+        },
+        "coordinates": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number",
+              "format": "float",
+              "example": 37.7749
+            },
+            "lng": {
+              "type": "number",
+              "format": "float",
+              "example": -122.4194
+            }
+          }
+        }
+      }
+    },
+    "zone": {
+      "type": "string",
+      "description": "Delivery zone or area",
+      "example": "Downtown"
+    },
+    "subscriptionType": {
+      "type": "string",
+      "enum": ["daily", "weekly"],
+      "description": "Type of subscription",
+      "example": "weekly"
+    },
+    "deliveryDays": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+      },
+      "description": "Days for scheduled deliveries",
+      "example": ["Mon", "Wed", "Fri"]
+    },
+    "preferredTimeSlot": {
+      "type": "string",
+      "description": "Preferred time for deliveries",
+      "example": "9am-12pm"
+    },
+    "alternateRecipient": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Jane Doe"
+        },
+        "phone": {
+          "type": "string",
+          "example": "+9876543210"
+        }
+      },
+      "description": "Alternative person who can receive deliveries"
+    },
+    "deliveryInstructions": {
+      "type": "string",
+      "description": "Special instructions for delivery",
+      "example": "Please leave packages at the back door"
+    },
+    "containerCount": {
+      "type": "integer",
+      "description": "Total number of containers given to subscriber",
+      "example": 5
+    },
+    "pendingContainers": {
+      "type": "integer",
+      "description": "Number of containers pending return",
+      "example": 2
+    },
+    "depositBalance": {
+      "type": "number",
+      "format": "float",
+      "description": "Current deposit balance",
+      "example": 50.00
+    },
+    "activeSubscriptions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "description": "IDs of active subscriptions",
+      "example": ["550e8400-e29b-41d4-a716-446655440007"]
+    },
+    "assignedTo": {
+      "type": "string",
+      "format": "uuid",
+      "description": "ID of assigned delivery personnel",
+      "example": "550e8400-e29b-41d4-a716-446655440006"
+    },
+    "primaryAdmin": {
+      "type": "string",
+      "format": "uuid",
+      "description": "ID of primary vendor/admin",
+      "example": "550e8400-e29b-41d4-a716-446655440001"
+    },
+    "relatedAdmins": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "description": "IDs of all vendors/admins the subscriber is associated with",
+      "example": ["550e8400-e29b-41d4-a716-446655440001"]
+    },
+    "reminderEnabled": {
+      "type": "boolean",
+      "description": "Whether reminders are enabled",
+      "example": true
+    },
+    "notificationPreferences": {
+      "type": "object",
+      "properties": {
+        "deliveryReminders": {
+          "type": "boolean",
+          "example": true
+        },
+        "returnReminders": {
+          "type": "boolean",
+          "example": true
+        },
+        "promotions": {
+          "type": "boolean",
+          "example": true
+        }
+      },
+      "description": "Notification preferences for different types of communications"
+    },
+    "swapEnabled": {
+      "type": "boolean",
+      "description": "Whether container swapping is enabled",
+      "example": true
+    },
+    "isActive": {
+      "type": "boolean",
+      "description": "Whether the subscriber is active",
+      "example": true
+    },
+    "notes": {
+      "type": "string",
+      "description": "General notes about the subscriber",
+      "example": "Prefers morning deliveries"
+    },
+    "paymentMethod": {
+      "type": "string",
+      "description": "Preferred payment method",
+      "example": "credit_card"
+    },
+    "billingAddress": {
+      "type": "string",
+      "description": "Billing address if different from delivery address",
+      "example": "456 Finance St, Anytown, USA"
+    },
+    "lastDeliveryDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date of the last delivery",
+      "example": "2023-06-15T10:00:00Z"
+    },
+    "joinDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date when the subscriber joined",
+      "example": "2023-01-01T12:00:00Z"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the subscriber record was created",
+      "example": "2023-01-01T12:00:00Z"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the subscriber record was last updated",
+      "example": "2023-06-15T15:30:00Z"
+    }
+  },
+  "required": ["userId", "address", "subscriptionType", "deliveryDays"]
+} 

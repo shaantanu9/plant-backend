@@ -1,0 +1,117 @@
+{
+  "post": {
+    "tags": ["User"],
+    "summary": "Verify email address",
+    "description": "Verify a user's email address using a verification token",
+    "operationId": "verifyEmail",
+    "requestBody": {
+      "description": "Email verification token",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["token"],
+            "properties": {
+              "token": {
+                "type": "string",
+                "description": "Email verification token",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Email verified successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Email verified successfully"
+                },
+                "user": {
+                  "$ref": "../../schemas/User.json"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Invalid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/Error.json"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Invalid or expired token",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/Error.json"
+            }
+          }
+        }
+      }
+    }
+  },
+  "get": {
+    "tags": ["User"],
+    "summary": "Request email verification",
+    "description": "Request a new email verification link to be sent to the user's email",
+    "operationId": "requestEmailVerification",
+    "security": [
+      {
+        "BearerAuth": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Verification email sent",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Verification email sent"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/Error.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Email already verified",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/Error.json"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

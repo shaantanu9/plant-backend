@@ -1,0 +1,434 @@
+{
+  "/reports/{reportId}/efficiency": {
+    "get": {
+      "tags": ["Reports"],
+      "summary": "Get container return efficiency",
+      "description": "Retrieves container return efficiency data for a specific report",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "reportId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the report",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Container return efficiency retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "overall": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Overall return rate as a percentage",
+                    "example": 85.7
+                  },
+                  "bySubscriber": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "subscriberId": {
+                          "type": "string",
+                          "format": "uuid",
+                          "example": "550e8400-e29b-41d4-a716-446655440003"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "John Doe"
+                        },
+                        "returnRate": {
+                          "type": "number",
+                          "format": "float",
+                          "example": 94.2
+                        },
+                        "containersHeld": {
+                          "type": "integer",
+                          "example": 3
+                        },
+                        "containersReturned": {
+                          "type": "integer",
+                          "example": 45
+                        }
+                      }
+                    }
+                  },
+                  "trend": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "date": {
+                          "type": "string",
+                          "format": "date",
+                          "example": "2023-06-10"
+                        },
+                        "rate": {
+                          "type": "number",
+                          "format": "float",
+                          "example": 82.5
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Report not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/reports/subscriber/{subscriberId}": {
+    "get": {
+      "tags": ["Reports"],
+      "summary": "Get subscriber report",
+      "description": "Retrieves report data specific to a subscriber",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "subscriberId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscriber",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "startDate",
+          "in": "query",
+          "required": false,
+          "description": "Start date for the report (YYYY-MM-DD)",
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        {
+          "name": "endDate",
+          "in": "query",
+          "required": false,
+          "description": "End date for the report (YYYY-MM-DD)",
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Subscriber report retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "subscriberId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "550e8400-e29b-41d4-a716-446655440003"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "stats": {
+                    "type": "object",
+                    "properties": {
+                      "totalContainersReceived": {
+                        "type": "integer",
+                        "example": 56
+                      },
+                      "totalContainersReturned": {
+                        "type": "integer",
+                        "example": 53
+                      },
+                      "returnRate": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 94.6
+                      },
+                      "currentlyHeld": {
+                        "type": "integer",
+                        "example": 3
+                      },
+                      "deliveriesReceived": {
+                        "type": "integer",
+                        "example": 24
+                      },
+                      "subscriptionsActive": {
+                        "type": "integer",
+                        "example": 2
+                      },
+                      "amountSpent": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 342.75
+                      }
+                    }
+                  },
+                  "history": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "date": {
+                          "type": "string",
+                          "format": "date",
+                          "example": "2023-06-15"
+                        },
+                        "containersReceived": {
+                          "type": "integer",
+                          "example": 3
+                        },
+                        "containersReturned": {
+                          "type": "integer",
+                          "example": 2
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscriber not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/reports/update/{type}/{date}": {
+    "put": {
+      "tags": ["Reports"],
+      "summary": "Update report by type and date",
+      "description": "Updates an existing report identified by its type and date",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "type",
+          "in": "path",
+          "required": true,
+          "description": "Type of report",
+          "schema": {
+            "type": "string",
+            "enum": ["daily", "weekly", "monthly", "custom"]
+          }
+        },
+        {
+          "name": "date",
+          "in": "path",
+          "required": true,
+          "description": "Date of the report (YYYY-MM-DD)",
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["generated", "draft", "archived"],
+                  "description": "Status of the report"
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Additional notes for the report"
+                },
+                "metrics": {
+                  "type": "object",
+                  "description": "Updated metrics for the report"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Report updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Report"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Report not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/reports/delete/{type}/{date}": {
+    "delete": {
+      "tags": ["Reports"],
+      "summary": "Delete report by type and date",
+      "description": "Deletes a report identified by its type and date",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "type",
+          "in": "path",
+          "required": true,
+          "description": "Type of report",
+          "schema": {
+            "type": "string",
+            "enum": ["daily", "weekly", "monthly", "custom"]
+          }
+        },
+        {
+          "name": "date",
+          "in": "path",
+          "required": true,
+          "description": "Date of the report (YYYY-MM-DD)",
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Report deleted successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Report deleted successfully"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Report not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

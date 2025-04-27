@@ -1,0 +1,367 @@
+{
+  "/reports": {
+    "post": {
+      "tags": ["Reports"],
+      "summary": "Create a new report",
+      "description": "Creates a new report with specified parameters",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["daily", "weekly", "monthly", "custom"],
+                  "description": "Type of report"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Date for which the report is being created"
+                },
+                "adminId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "ID of the admin creating the report"
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Additional notes for the report"
+                },
+                "dateRange": {
+                  "type": "object",
+                  "description": "Date range for the report (if applicable)",
+                  "properties": {
+                    "from": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Start date"
+                    },
+                    "to": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "End date"
+                    }
+                  }
+                }
+              },
+              "required": ["type", "adminId"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Report created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Report"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "get": {
+      "tags": ["Reports"],
+      "summary": "Get report by type and date",
+      "description": "Retrieves a report based on type and date query parameters",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "type",
+          "in": "query",
+          "required": true,
+          "description": "Type of report",
+          "schema": {
+            "type": "string",
+            "enum": ["daily", "weekly", "monthly", "custom"]
+          }
+        },
+        {
+          "name": "date",
+          "in": "query",
+          "required": true,
+          "description": "Date for which to retrieve the report (YYYY-MM-DD)",
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Report retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Report"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Report not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/reports/{reportId}": {
+    "get": {
+      "tags": ["Reports"],
+      "summary": "Get report by ID",
+      "description": "Retrieves a specific report by its ID",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "reportId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the report to retrieve",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Report retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Report"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Report not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["Reports"],
+      "summary": "Update report by ID",
+      "description": "Updates an existing report by its ID",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "reportId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the report to update",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["generated", "draft", "archived"],
+                  "description": "Status of the report"
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Additional notes for the report"
+                },
+                "metrics": {
+                  "type": "object",
+                  "description": "Updated metrics for the report"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Report updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Report"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Report not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["Reports"],
+      "summary": "Delete report by ID",
+      "description": "Deletes a report by its ID",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "reportId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the report to delete",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Report deleted successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Report deleted successfully"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Report not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

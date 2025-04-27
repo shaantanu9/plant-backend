@@ -1,0 +1,620 @@
+{
+  "/subscribers/filter": {
+    "post": {
+      "tags": ["Subscribers"],
+      "summary": "Advanced subscriber filtering",
+      "description": "Filter subscribers based on multiple criteria",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "zones": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Filter by multiple zones"
+                },
+                "subscriptionTypes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["daily", "weekly"]
+                  },
+                  "description": "Filter by subscription types"
+                },
+                "deliveryDays": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+                  },
+                  "description": "Filter by delivery days"
+                },
+                "isActive": {
+                  "type": "boolean",
+                  "description": "Filter by active status"
+                },
+                "joinDateRange": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "end": {
+                      "type": "string",
+                      "format": "date"
+                    }
+                  },
+                  "description": "Filter by join date range"
+                },
+                "containerCount": {
+                  "type": "object",
+                  "properties": {
+                    "min": {
+                      "type": "integer"
+                    },
+                    "max": {
+                      "type": "integer"
+                    }
+                  },
+                  "description": "Filter by container count range"
+                },
+                "pendingContainers": {
+                  "type": "object",
+                  "properties": {
+                    "min": {
+                      "type": "integer"
+                    },
+                    "max": {
+                      "type": "integer"
+                    }
+                  },
+                  "description": "Filter by pending containers range"
+                },
+                "assignedTo": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "Filter by assigned delivery personnel ID"
+                },
+                "primaryAdmin": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "Filter by primary admin ID"
+                },
+                "page": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "default": 1,
+                  "description": "Page number for pagination"
+                },
+                "limit": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 100,
+                  "default": 20,
+                  "description": "Number of results per page"
+                },
+                "sort": {
+                  "type": "string",
+                  "enum": ["name", "zone", "joinDate", "containerCount", "pendingContainers"],
+                  "default": "joinDate",
+                  "description": "Field to sort by"
+                },
+                "order": {
+                  "type": "string",
+                  "enum": ["asc", "desc"],
+                  "default": "desc",
+                  "description": "Sort order"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Filtered subscribers retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Subscriber"
+                    }
+                  },
+                  "pagination": {
+                    "$ref": "#/components/schemas/Pagination"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid filter criteria",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscribers/search": {
+    "get": {
+      "tags": ["Subscribers"],
+      "summary": "Search subscribers",
+      "description": "Search subscribers by name, address, or other attributes",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "q",
+          "in": "query",
+          "required": true,
+          "description": "Search query term",
+          "schema": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        {
+          "name": "fields",
+          "in": "query",
+          "required": false,
+          "description": "Fields to search in (comma-separated)",
+          "schema": {
+            "type": "string",
+            "default": "name,address,mobile,notes"
+          }
+        },
+        {
+          "name": "isActive",
+          "in": "query",
+          "required": false,
+          "description": "Filter by active status",
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "required": false,
+          "description": "Page number for pagination",
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "required": false,
+          "description": "Number of results per page",
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 20
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Search results retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Subscriber"
+                    }
+                  },
+                  "pagination": {
+                    "$ref": "#/components/schemas/Pagination"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid search parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscribers/by-user/{userId}": {
+    "get": {
+      "tags": ["Subscribers"],
+      "summary": "Get subscriber by user ID",
+      "description": "Retrieves a subscriber profile associated with a specific user account",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the user account",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Subscriber retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subscriber"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "No subscriber found for this user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscribers/zone/{zone}": {
+    "get": {
+      "tags": ["Subscribers"],
+      "summary": "Get subscribers by zone",
+      "description": "Retrieves subscribers from a specific zone or delivery area",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "zone",
+          "in": "path",
+          "required": true,
+          "description": "Zone or delivery area",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "isActive",
+          "in": "query",
+          "required": false,
+          "description": "Filter by active status",
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "required": false,
+          "description": "Page number for pagination",
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "required": false,
+          "description": "Number of results per page",
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 20
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Subscribers in zone retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Subscriber"
+                    }
+                  },
+                  "pagination": {
+                    "$ref": "#/components/schemas/Pagination"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscribers/personnel/{personnelId}": {
+    "get": {
+      "tags": ["Subscribers"],
+      "summary": "Get subscribers by delivery personnel ID",
+      "description": "Retrieves subscribers assigned to a specific delivery personnel",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "personnelId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the delivery personnel",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "isActive",
+          "in": "query",
+          "required": false,
+          "description": "Filter by active status",
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "required": false,
+          "description": "Page number for pagination",
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "required": false,
+          "description": "Number of results per page",
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 20
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Subscribers assigned to personnel retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Subscriber"
+                    }
+                  },
+                  "pagination": {
+                    "$ref": "#/components/schemas/Pagination"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Delivery personnel not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscribers/subscription-type/{type}": {
+    "get": {
+      "tags": ["Subscribers"],
+      "summary": "Get subscribers by subscription type",
+      "description": "Retrieves subscribers with a specific subscription type (daily, weekly, etc.)",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "type",
+          "in": "path",
+          "required": true,
+          "description": "Subscription type",
+          "schema": {
+            "type": "string",
+            "enum": ["daily", "weekly"]
+          }
+        },
+        {
+          "name": "isActive",
+          "in": "query",
+          "required": false,
+          "description": "Filter by active status",
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "required": false,
+          "description": "Page number for pagination",
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "required": false,
+          "description": "Number of results per page",
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 20
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Subscribers with specified subscription type retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Subscriber"
+                    }
+                  },
+                  "pagination": {
+                    "$ref": "#/components/schemas/Pagination"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid subscription type",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

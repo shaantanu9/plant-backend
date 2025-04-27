@@ -1,0 +1,643 @@
+{
+  "/subscriptions/stats/admin/{adminId}": {
+    "get": {
+      "tags": ["Subscriptions", "Analytics"],
+      "summary": "Get subscription stats by admin",
+      "description": "Retrieves subscription statistics for a specific admin",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "adminId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the admin",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "startDate",
+          "in": "query",
+          "required": false,
+          "description": "Start date for statistics period",
+          "schema": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        {
+          "name": "endDate",
+          "in": "query",
+          "required": false,
+          "description": "End date for statistics period",
+          "schema": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        {
+          "name": "groupBy",
+          "in": "query",
+          "required": false,
+          "description": "How to group the statistics",
+          "schema": {
+            "type": "string",
+            "enum": ["day", "week", "month", "year"],
+            "default": "month"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Subscription statistics",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "summary": {
+                    "type": "object",
+                    "properties": {
+                      "totalCount": {
+                        "type": "integer",
+                        "description": "Total count of subscriptions"
+                      },
+                      "activeCount": {
+                        "type": "integer",
+                        "description": "Count of active subscriptions"
+                      },
+                      "averageDuration": {
+                        "type": "number",
+                        "description": "Average duration in days"
+                      },
+                      "totalRevenue": {
+                        "type": "number",
+                        "description": "Total revenue generated"
+                      },
+                      "averageValue": {
+                        "type": "number",
+                        "description": "Average subscription value"
+                      },
+                      "churnRate": {
+                        "type": "number",
+                        "description": "Subscription churn rate (%)"
+                      },
+                      "growthRate": {
+                        "type": "number",
+                        "description": "Subscription growth rate (%)"
+                      }
+                    }
+                  },
+                  "trends": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "period": {
+                          "type": "string",
+                          "description": "Period (Month/Year, Week, etc.)"
+                        },
+                        "newSubscriptions": {
+                          "type": "integer",
+                          "description": "New subscriptions in the period"
+                        },
+                        "cancelledSubscriptions": {
+                          "type": "integer",
+                          "description": "Cancelled subscriptions in the period"
+                        },
+                        "revenue": {
+                          "type": "number",
+                          "description": "Revenue in the period"
+                        },
+                        "activeSubscriptions": {
+                          "type": "integer",
+                          "description": "Active subscriptions at end of period"
+                        }
+                      }
+                    }
+                  },
+                  "byItem": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "itemId": {
+                          "type": "string",
+                          "description": "Item ID"
+                        },
+                        "itemName": {
+                          "type": "string",
+                          "description": "Item name"
+                        },
+                        "count": {
+                          "type": "integer",
+                          "description": "Number of subscriptions"
+                        },
+                        "revenue": {
+                          "type": "number",
+                          "description": "Revenue generated"
+                        },
+                        "percentage": {
+                          "type": "number",
+                          "description": "Percentage of total subscriptions"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Admin not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscriptions/stats/item/{itemId}": {
+    "get": {
+      "tags": ["Subscriptions", "Analytics"],
+      "summary": "Get subscription stats by item",
+      "description": "Retrieves subscription statistics for a specific item",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "itemId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the item",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "startDate",
+          "in": "query",
+          "required": false,
+          "description": "Start date for statistics period",
+          "schema": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        {
+          "name": "endDate",
+          "in": "query",
+          "required": false,
+          "description": "End date for statistics period",
+          "schema": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        {
+          "name": "groupBy",
+          "in": "query",
+          "required": false,
+          "description": "How to group the statistics",
+          "schema": {
+            "type": "string",
+            "enum": ["day", "week", "month", "year"],
+            "default": "month"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Item subscription statistics",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "item": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "category": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "summary": {
+                    "type": "object",
+                    "properties": {
+                      "totalSubscriptions": {
+                        "type": "integer",
+                        "description": "Total subscriptions for this item"
+                      },
+                      "activeSubscriptions": {
+                        "type": "integer",
+                        "description": "Active subscriptions for this item"
+                      },
+                      "averageDuration": {
+                        "type": "number",
+                        "description": "Average subscription duration in days"
+                      },
+                      "totalRevenue": {
+                        "type": "number",
+                        "description": "Total revenue from this item"
+                      },
+                      "churnRate": {
+                        "type": "number",
+                        "description": "Churn rate for this item"
+                      }
+                    }
+                  },
+                  "trends": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "period": {
+                          "type": "string",
+                          "description": "Period (Month/Year, Week, etc.)"
+                        },
+                        "newSubscriptions": {
+                          "type": "integer",
+                          "description": "New subscriptions in the period"
+                        },
+                        "cancelledSubscriptions": {
+                          "type": "integer",
+                          "description": "Cancelled subscriptions in the period"
+                        },
+                        "revenue": {
+                          "type": "number",
+                          "description": "Revenue in the period"
+                        },
+                        "activeSubscriptions": {
+                          "type": "integer",
+                          "description": "Active subscriptions at end of period"
+                        }
+                      }
+                    }
+                  },
+                  "demographics": {
+                    "type": "object",
+                    "properties": {
+                      "byLocation": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "location": {
+                              "type": "string"
+                            },
+                            "count": {
+                              "type": "integer"
+                            },
+                            "percentage": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      },
+                      "byFrequency": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "frequency": {
+                              "type": "string"
+                            },
+                            "count": {
+                              "type": "integer"
+                            },
+                            "percentage": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Item not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscriptions/stats/overview": {
+    "get": {
+      "tags": ["Subscriptions", "Analytics"],
+      "summary": "Get overall subscription stats",
+      "description": "Retrieves platform-wide subscription statistics",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "startDate",
+          "in": "query",
+          "required": false,
+          "description": "Start date for statistics period",
+          "schema": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        {
+          "name": "endDate",
+          "in": "query",
+          "required": false,
+          "description": "End date for statistics period",
+          "schema": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        {
+          "name": "groupBy",
+          "in": "query",
+          "required": false,
+          "description": "How to group the statistics",
+          "schema": {
+            "type": "string",
+            "enum": ["day", "week", "month", "year"],
+            "default": "month"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Platform-wide subscription statistics",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "summary": {
+                    "type": "object",
+                    "properties": {
+                      "totalSubscriptions": {
+                        "type": "integer",
+                        "description": "Total subscriptions on the platform"
+                      },
+                      "activeSubscriptions": {
+                        "type": "integer",
+                        "description": "Active subscriptions on the platform"
+                      },
+                      "pausedSubscriptions": {
+                        "type": "integer",
+                        "description": "Paused subscriptions on the platform"
+                      },
+                      "cancelledSubscriptions": {
+                        "type": "integer",
+                        "description": "Cancelled subscriptions on the platform"
+                      },
+                      "expiredSubscriptions": {
+                        "type": "integer",
+                        "description": "Expired subscriptions on the platform"
+                      },
+                      "averageSubscriptionValue": {
+                        "type": "number",
+                        "description": "Average subscription value"
+                      },
+                      "totalRevenue": {
+                        "type": "number",
+                        "description": "Total revenue from all subscriptions"
+                      },
+                      "monthlyRecurringRevenue": {
+                        "type": "number",
+                        "description": "Monthly recurring revenue"
+                      },
+                      "churnRate": {
+                        "type": "number",
+                        "description": "Platform-wide churn rate"
+                      },
+                      "averageLifespan": {
+                        "type": "number",
+                        "description": "Average subscription lifespan in days"
+                      }
+                    }
+                  },
+                  "trends": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "period": {
+                          "type": "string",
+                          "description": "Period (Month/Year, Week, etc.)"
+                        },
+                        "newSubscriptions": {
+                          "type": "integer",
+                          "description": "New subscriptions in the period"
+                        },
+                        "cancelledSubscriptions": {
+                          "type": "integer",
+                          "description": "Cancelled subscriptions in the period"
+                        },
+                        "revenue": {
+                          "type": "number",
+                          "description": "Revenue in the period"
+                        },
+                        "mrr": {
+                          "type": "number",
+                          "description": "Monthly Recurring Revenue"
+                        },
+                        "churnRate": {
+                          "type": "number",
+                          "description": "Churn rate for the period"
+                        }
+                      }
+                    }
+                  },
+                  "topItems": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "itemId": {
+                          "type": "string"
+                        },
+                        "itemName": {
+                          "type": "string"
+                        },
+                        "subscriptionCount": {
+                          "type": "integer"
+                        },
+                        "revenue": {
+                          "type": "number"
+                        },
+                        "percentageOfTotal": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  },
+                  "topAdmins": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "adminId": {
+                          "type": "string"
+                        },
+                        "adminName": {
+                          "type": "string"
+                        },
+                        "subscriptionCount": {
+                          "type": "integer"
+                        },
+                        "revenue": {
+                          "type": "number"
+                        },
+                        "percentageOfTotal": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscriptions/stats/frequency": {
+    "get": {
+      "tags": ["Subscriptions", "Analytics"],
+      "summary": "Get frequency distribution",
+      "description": "Retrieves distribution of subscriptions by frequency",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "adminId",
+          "in": "query",
+          "required": false,
+          "description": "Filter by admin ID",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "status",
+          "in": "query",
+          "required": false,
+          "description": "Filter by subscription status",
+          "schema": {
+            "type": "string",
+            "enum": ["active", "paused", "cancelled", "expired", "pending"]
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Subscription frequency distribution",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "frequency": {
+                      "type": "string",
+                      "description": "Subscription frequency (daily, weekly, etc.)"
+                    },
+                    "count": {
+                      "type": "integer",
+                      "description": "Number of subscriptions with this frequency"
+                    },
+                    "percentage": {
+                      "type": "number",
+                      "description": "Percentage of total subscriptions"
+                    },
+                    "revenue": {
+                      "type": "number",
+                      "description": "Total revenue from subscriptions with this frequency"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

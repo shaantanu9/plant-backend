@@ -1,0 +1,411 @@
+{
+  "/items/admin/{adminId}": {
+    "get": {
+      "tags": ["Items", "Admin"],
+      "summary": "Get items by admin ID",
+      "description": "Retrieves all items created by a specific admin",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "adminId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the admin",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Items retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Item"
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Admin not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/items/admin/{adminId}/active": {
+    "get": {
+      "tags": ["Items", "Admin"],
+      "summary": "Get active items by admin ID",
+      "description": "Retrieves all active items created by a specific admin",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "adminId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the admin",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Active items retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Item"
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Admin not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/items/admin/{adminId}/summary": {
+    "get": {
+      "tags": ["Items", "Admin"],
+      "summary": "Get admin item summary",
+      "description": "Retrieves a summary of all items created by a specific admin",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "adminId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the admin",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Item summary retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "totalItems": {
+                    "type": "integer",
+                    "example": 50
+                  },
+                  "activeItems": {
+                    "type": "integer",
+                    "example": 35
+                  },
+                  "categoryCounts": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "integer"
+                    },
+                    "example": {
+                      "Dairy": 10,
+                      "Produce": 15,
+                      "Bakery": 5
+                    }
+                  },
+                  "containerTypeCounts": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "integer"
+                    },
+                    "example": {
+                      "jar": 20,
+                      "bottle": 15,
+                      "box": 5
+                    }
+                  },
+                  "dietaryStats": {
+                    "type": "object",
+                    "properties": {
+                      "vegetarian": {
+                        "type": "integer",
+                        "example": 30
+                      },
+                      "vegan": {
+                        "type": "integer",
+                        "example": 20
+                      },
+                      "glutenFree": {
+                        "type": "integer",
+                        "example": 25
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Admin not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/items/admin/{adminId}/count": {
+    "get": {
+      "tags": ["Items", "Admin"],
+      "summary": "Count items by admin",
+      "description": "Counts the number of items created by a specific admin",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "adminId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the admin",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Item count retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "count": {
+                    "type": "integer",
+                    "example": 50
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Admin not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/items/admin/{adminId}/categories": {
+    "get": {
+      "tags": ["Items", "Admin"],
+      "summary": "Get admin categories",
+      "description": "Retrieves all categories of items created by a specific admin",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "adminId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the admin",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Categories retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": ["Dairy", "Produce", "Bakery"]
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Admin not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/items/admin/{adminId}/category-count": {
+    "get": {
+      "tags": ["Items", "Admin"],
+      "summary": "Get item count by category",
+      "description": "Retrieves the count of items by category for a specific admin",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "adminId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the admin",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Category counts retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer"
+                },
+                "example": {
+                  "Dairy": 10,
+                  "Produce": 15,
+                  "Bakery": 5
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Admin not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

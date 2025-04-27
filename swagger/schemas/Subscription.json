@@ -1,0 +1,337 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the subscription",
+      "example": "5f8d45e2a1c3f215e4b2d3a7"
+    },
+    "subscriberId": {
+      "type": "string",
+      "description": "ID of the subscriber",
+      "example": "5f8d45e2a1c3f215e4b2d3a8"
+    },
+    "itemId": {
+      "type": "string",
+      "description": "ID of the item being subscribed to",
+      "example": "5f8d45e2a1c3f215e4b2d3a9"
+    },
+    "adminId": {
+      "type": "string",
+      "description": "ID of the admin managing the subscription",
+      "example": "5f8d45e2a1c3f215e4b2d3aa"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "paused", "cancelled", "expired", "pending", "failed"],
+      "description": "Current status of the subscription",
+      "example": "active"
+    },
+    "statusHistory": {
+      "type": "array",
+      "description": "History of status changes",
+      "items": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["active", "paused", "cancelled", "expired", "pending", "failed"]
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "frequency": {
+      "type": "string",
+      "enum": ["daily", "weekly", "biweekly", "monthly"],
+      "description": "Frequency of delivery",
+      "example": "weekly"
+    },
+    "quantity": {
+      "type": "integer",
+      "description": "Quantity of items per delivery",
+      "minimum": 1,
+      "example": 1
+    },
+    "startDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Start date of the subscription",
+      "example": "2023-01-01T00:00:00Z"
+    },
+    "endDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "End date of the subscription (null for open-ended)",
+      "example": "2023-12-31T23:59:59Z"
+    },
+    "deliveryAddress": {
+      "type": "object",
+      "description": "Delivery address for the subscription",
+      "properties": {
+        "street": {
+          "type": "string",
+          "example": "123 Main St"
+        },
+        "city": {
+          "type": "string",
+          "example": "New York"
+        },
+        "state": {
+          "type": "string",
+          "example": "NY"
+        },
+        "zipCode": {
+          "type": "string",
+          "example": "10001"
+        },
+        "country": {
+          "type": "string",
+          "example": "USA"
+        },
+        "coordinates": {
+          "type": "object",
+          "properties": {
+            "latitude": {
+              "type": "number",
+              "example": 40.7128
+            },
+            "longitude": {
+              "type": "number",
+              "example": -74.006
+            }
+          }
+        },
+        "notes": {
+          "type": "string",
+          "example": "Ring doorbell upon arrival"
+        }
+      }
+    },
+    "deliveryTimeSlot": {
+      "type": "object",
+      "description": "Preferred delivery time slot",
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "Start time in HH:MM format",
+          "example": "09:00"
+        },
+        "to": {
+          "type": "string",
+          "description": "End time in HH:MM format",
+          "example": "12:00"
+        }
+      }
+    },
+    "deliveryDays": {
+      "type": "array",
+      "description": "Days of the week for delivery",
+      "items": {
+        "type": "string",
+        "enum": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+      },
+      "example": ["Mon", "Wed", "Fri"]
+    },
+    "billingCycle": {
+      "type": "object",
+      "description": "Billing cycle information",
+      "properties": {
+        "frequency": {
+          "type": "string",
+          "enum": ["weekly", "biweekly", "monthly"],
+          "example": "monthly"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-01-01T00:00:00Z"
+        },
+        "nextBillingDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-02-01T00:00:00Z"
+        }
+      }
+    },
+    "price": {
+      "type": "object",
+      "description": "Price information",
+      "properties": {
+        "basePrice": {
+          "type": "number",
+          "description": "Base price per delivery",
+          "example": 19.99
+        },
+        "discount": {
+          "type": "number",
+          "description": "Discount amount",
+          "example": 2.00
+        },
+        "tax": {
+          "type": "number",
+          "description": "Tax amount",
+          "example": 1.50
+        },
+        "deliveryFee": {
+          "type": "number",
+          "description": "Delivery fee",
+          "example": 3.00
+        },
+        "depositFee": {
+          "type": "number",
+          "description": "Container deposit fee",
+          "example": 5.00
+        },
+        "total": {
+          "type": "number",
+          "description": "Total price per delivery",
+          "example": 27.49
+        }
+      }
+    },
+    "paymentMethod": {
+      "type": "string",
+      "description": "ID of the payment method",
+      "example": "5f8d45e2a1c3f215e4b2d3ab"
+    },
+    "containers": {
+      "type": "array",
+      "description": "Containers associated with the subscription",
+      "items": {
+        "type": "object",
+        "properties": {
+          "containerId": {
+            "type": "string",
+            "example": "5f8d45e2a1c3f215e4b2d3ac"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "returned", "lost", "damaged"],
+            "example": "active"
+          },
+          "assignedDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-05T10:30:00Z"
+          },
+          "returnDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": null
+          }
+        }
+      }
+    },
+    "deliveries": {
+      "type": "array",
+      "description": "Recent deliveries for this subscription",
+      "items": {
+        "type": "object",
+        "properties": {
+          "deliveryId": {
+            "type": "string",
+            "example": "5f8d45e2a1c3f215e4b2d3ad"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["scheduled", "in-transit", "delivered", "failed", "cancelled"],
+            "example": "delivered"
+          },
+          "scheduledDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-08T10:00:00Z"
+          },
+          "deliveredDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-08T10:15:00Z"
+          }
+        }
+      }
+    },
+    "nextDeliveryDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date of the next scheduled delivery",
+      "example": "2023-01-15T10:00:00Z"
+    },
+    "pauseDetails": {
+      "type": "object",
+      "description": "Details about paused subscription",
+      "properties": {
+        "pausedOn": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-02-01T00:00:00Z"
+        },
+        "resumeOn": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-03-01T00:00:00Z"
+        },
+        "reason": {
+          "type": "string",
+          "example": "Vacation"
+        }
+      }
+    },
+    "cancellationDetails": {
+      "type": "object",
+      "description": "Details about cancelled subscription",
+      "properties": {
+        "cancelledOn": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-02-15T00:00:00Z"
+        },
+        "reason": {
+          "type": "string",
+          "example": "Moving to a different city"
+        },
+        "feedback": {
+          "type": "string",
+          "example": "Great service, but I'm relocating."
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes for the subscription",
+      "example": "Customer prefers paper bags instead of plastic."
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date when the subscription was created",
+      "example": "2022-12-31T15:30:00Z"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date when the subscription was last updated",
+      "example": "2023-01-15T09:45:00Z"
+    }
+  },
+  "required": [
+    "subscriberId",
+    "itemId",
+    "status",
+    "frequency",
+    "quantity",
+    "startDate",
+    "deliveryAddress",
+    "deliveryTimeSlot",
+    "deliveryDays"
+  ]
+} 

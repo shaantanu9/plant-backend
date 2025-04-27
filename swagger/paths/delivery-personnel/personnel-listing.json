@@ -1,0 +1,207 @@
+{
+  "get": {
+    "tags": ["DeliveryPersonnel", "Analytics"],
+    "summary": "Get delivery personnel listing with analytics",
+    "description": "Retrieves an aggregated list of delivery personnel with statistics and filtering options",
+    "operationId": "aggregateDeliveryPersonnel",
+    "security": [{ "BearerAuth": [] }],
+    "parameters": [
+      {
+        "name": "page",
+        "in": "query",
+        "description": "Page number",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "description": "Number of items per page",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "description": "Field to sort by",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["name", "zone", "createdAt", "deliveryStats.totalDeliveries"],
+          "default": "createdAt"
+        }
+      },
+      {
+        "name": "order",
+        "in": "query",
+        "description": "Sort order",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["asc", "desc"],
+          "default": "desc"
+        }
+      },
+      {
+        "name": "zone",
+        "in": "query",
+        "description": "Filter by zone",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "isActive",
+        "in": "query",
+        "description": "Filter by active status",
+        "required": false,
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "vehicleType",
+        "in": "query",
+        "description": "Filter by vehicle type",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["bicycle", "motorcycle", "car", "van", "truck", "other", "bike"]
+        }
+      },
+      {
+        "name": "availableDay",
+        "in": "query",
+        "description": "Filter by available day",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Successful operation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeliveryPersonnel"
+                  }
+                },
+                "pagination": {
+                  "$ref": "#/components/schemas/Pagination"
+                },
+                "summary": {
+                  "type": "object",
+                  "properties": {
+                    "totalPersonnel": {
+                      "type": "integer",
+                      "description": "Total number of delivery personnel",
+                      "example": 50
+                    },
+                    "activePersonnel": {
+                      "type": "integer",
+                      "description": "Number of active delivery personnel",
+                      "example": 45
+                    },
+                    "byZone": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "integer"
+                      },
+                      "example": {
+                        "Downtown": 15,
+                        "Uptown": 12,
+                        "Midtown": 10,
+                        "Suburb": 8
+                      }
+                    },
+                    "byVehicleType": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "integer"
+                      },
+                      "example": {
+                        "motorcycle": 20,
+                        "car": 15,
+                        "bicycle": 10,
+                        "van": 5
+                      }
+                    },
+                    "avgDeliveriesPerDay": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Average deliveries per day across all personnel",
+                      "example": 14.5
+                    },
+                    "topPerformers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "550e8400-e29b-41d4-a716-446655440007"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "John Doe"
+                          },
+                          "deliveries": {
+                            "type": "integer",
+                            "example": 250
+                          },
+                          "rating": {
+                            "type": "number",
+                            "format": "float",
+                            "example": 4.95
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Insufficient permissions",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

@@ -1,0 +1,28 @@
+apis:
+  main:
+    root: swagger/base.json
+
+rules:
+  no-unused-components: error
+  no-path-trailing-slash: warn
+  operation-2xx-response: warn
+  operation-operationId-unique: error
+  operation-parameters-unique: error
+  path-declaration-must-exist: error
+  path-not-include-query: error
+  no-unresolved-refs: error
+
+theme:
+  openapi:
+    hideDownloadButton: false
+    theme:
+      colors:
+        primary:
+          main: '#32329f'
+      typography:
+        fontSize: '16px'
+        headings:
+          fontFamily: 'Montserrat, sans-serif'
+          fontWeight: '700'
+        code:
+          fontSize: '14px'

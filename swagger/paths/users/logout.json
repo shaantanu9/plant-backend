@@ -1,0 +1,41 @@
+{
+  "post": {
+    "tags": ["User"],
+    "summary": "User logout",
+    "description": "Logout the currently authenticated user and invalidate their token",
+    "operationId": "logoutUser",
+    "security": [
+      {
+        "BearerAuth": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Logout successful",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Logout successful"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/Error.json"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

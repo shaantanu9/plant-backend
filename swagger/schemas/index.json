@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "Error": {
+    "$ref": "./Error.json"
+  },
+  "Container": {
+    "$ref": "./Container.json"
+  },
+  "User": {
+    "$ref": "./User.json"
+  },
+  "Admin": {
+    "$ref": "./Admin.json"
+  },
+  "Delivery": {
+    "$ref": "./Delivery.json"
+  },
+  "DeliveryPersonnel": {
+    "$ref": "./DeliveryPersonnel.json"
+  },
+  "Item": {
+    "$ref": "./Item.json"
+  },
+  "Subscriber": {
+    "$ref": "./Subscriber.json"
+  },
+  "Report": {
+    "$ref": "./Report.json"
+  },
+  "Subscription": {
+    "$ref": "./Subscription.json"
+  },
+  "Pagination": {
+    "type": "object",
+    "properties": {
+      "total": {
+        "type": "integer",
+        "example": 100
+      },
+      "page": {
+        "type": "integer",
+        "example": 1
+      },
+      "limit": {
+        "type": "integer",
+        "example": 20
+      },
+      "pages": {
+        "type": "integer",
+        "example": 5
+      },
+      "hasNext": {
+        "type": "boolean",
+        "example": true
+      },
+      "hasPrev": {
+        "type": "boolean",
+        "example": false
+      }
+    }
+  }
+} 

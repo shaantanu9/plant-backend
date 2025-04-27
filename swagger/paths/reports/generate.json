@@ -1,0 +1,224 @@
+{
+  "/reports/generate/daily": {
+    "post": {
+      "tags": ["Reports"],
+      "summary": "Generate daily report",
+      "description": "Generates a new daily report for a specific date",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Date for which to generate the report (YYYY-MM-DD)",
+                  "example": "2023-06-15"
+                },
+                "adminId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "ID of the admin generating the report"
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Additional notes for the report"
+                }
+              },
+              "required": ["date", "adminId"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Daily report generated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Report"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/reports/generate/weekly": {
+    "post": {
+      "tags": ["Reports"],
+      "summary": "Generate weekly report",
+      "description": "Generates a new weekly report for a specific week",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "weekStartDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Start date of the week (YYYY-MM-DD)",
+                  "example": "2023-06-12"
+                },
+                "adminId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "ID of the admin generating the report"
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Additional notes for the report"
+                }
+              },
+              "required": ["weekStartDate", "adminId"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Weekly report generated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Report"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/reports/generate/monthly": {
+    "post": {
+      "tags": ["Reports"],
+      "summary": "Generate monthly report",
+      "description": "Generates a new monthly report for a specific month",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "year": {
+                  "type": "integer",
+                  "description": "Year for the monthly report",
+                  "example": 2023
+                },
+                "month": {
+                  "type": "integer",
+                  "description": "Month for the monthly report (1-12)",
+                  "minimum": 1,
+                  "maximum": 12,
+                  "example": 6
+                },
+                "adminId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "ID of the admin generating the report"
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Additional notes for the report"
+                }
+              },
+              "required": ["year", "month", "adminId"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Monthly report generated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Report"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

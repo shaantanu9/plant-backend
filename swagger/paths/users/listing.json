@@ -1,0 +1,349 @@
+{
+  "/users/status/{status}": {
+    "get": {
+      "tags": ["User"],
+      "summary": "Get users by status",
+      "description": "Retrieve a list of users filtered by status",
+      "operationId": "getUsersByStatus",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "status",
+          "in": "path",
+          "description": "Status to filter by",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": ["active", "inactive", "suspended"]
+          }
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "description": "Page number",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "Number of items per page",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 20
+          }
+        },
+        {
+          "name": "sort",
+          "in": "query",
+          "description": "Field to sort by",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["name", "email", "createdAt", "updatedAt"],
+            "default": "createdAt"
+          }
+        },
+        {
+          "name": "order",
+          "in": "query",
+          "description": "Sort order",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["asc", "desc"],
+            "default": "desc"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of users with the specified status",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../../schemas/User.json"
+                    }
+                  },
+                  "pagination": {
+                    "$ref": "../../schemas/index.json#/Pagination"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid status value",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "Forbidden - Insufficient permissions",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/users/search": {
+    "get": {
+      "tags": ["User"],
+      "summary": "Search users",
+      "description": "Search for users by name or email",
+      "operationId": "searchUsers",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "q",
+          "in": "query",
+          "description": "Search query (name or email)",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "minLength": 2
+          }
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "description": "Page number",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "Number of items per page",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 20
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Search results",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../../schemas/User.json"
+                    }
+                  },
+                  "pagination": {
+                    "$ref": "../../schemas/index.json#/Pagination"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid search query",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "Forbidden - Insufficient permissions",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/users/role/{role}": {
+    "get": {
+      "tags": ["User"],
+      "summary": "Get users by role",
+      "description": "Retrieve a list of users filtered by role",
+      "operationId": "getUsersByRole",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "role",
+          "in": "path",
+          "description": "Role to filter by",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": ["user", "admin", "superadmin"]
+          }
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "description": "Page number",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "Number of items per page",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 20
+          }
+        },
+        {
+          "name": "sort",
+          "in": "query",
+          "description": "Field to sort by",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["name", "email", "createdAt", "updatedAt"],
+            "default": "createdAt"
+          }
+        },
+        {
+          "name": "order",
+          "in": "query",
+          "description": "Sort order",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["asc", "desc"],
+            "default": "desc"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of users with the specified role",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../../schemas/User.json"
+                    }
+                  },
+                  "pagination": {
+                    "$ref": "../../schemas/index.json#/Pagination"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid role value",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "Forbidden - Insufficient permissions",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

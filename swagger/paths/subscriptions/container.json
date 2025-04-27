@@ -1,0 +1,477 @@
+{
+  "/subscriptions/{id}/container": {
+    "post": {
+      "tags": ["Subscriptions"],
+      "summary": "Add container",
+      "description": "Adds a container to the subscription",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscription",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["containerId"],
+              "properties": {
+                "containerId": {
+                  "type": "string",
+                  "description": "ID of the container to add"
+                },
+                "assignedDate": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Date when the container was assigned"
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Notes about the container assignment"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Container added successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subscription"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Container already assigned or invalid container",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscription or container not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscriptions/{id}/containers": {
+    "get": {
+      "tags": ["Subscriptions"],
+      "summary": "Get containers",
+      "description": "Retrieves all containers assigned to a subscription",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscription",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "status",
+          "in": "query",
+          "required": false,
+          "description": "Filter by container status",
+          "schema": {
+            "type": "string",
+            "enum": ["active", "returned", "lost", "damaged"]
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of containers",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscription not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscriptions/{id}/container/{containerId}": {
+    "delete": {
+      "tags": ["Subscriptions"],
+      "summary": "Remove container",
+      "description": "Removes a container from the subscription",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscription",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "containerId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the container to remove",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": false,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "returnDate": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Date when the container was returned"
+                },
+                "condition": {
+                  "type": "string",
+                  "enum": ["good", "damaged", "lost"],
+                  "description": "Condition of the container upon return"
+                },
+                "refundDeposit": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Whether to refund the deposit for this container"
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Notes about the container return"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Container removed successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subscription"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscription or container not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["Subscriptions"],
+      "summary": "Update container status",
+      "description": "Updates the status of a container in the subscription",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscription",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "containerId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the container to update",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["status"],
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["active", "returned", "lost", "damaged"],
+                  "description": "New status for the container"
+                },
+                "statusDate": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Date when the status changed"
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Notes about the status change"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Container status updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Container"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscription or container not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscriptions/{id}/containers/bulk-update": {
+    "put": {
+      "tags": ["Subscriptions"],
+      "summary": "Bulk update containers",
+      "description": "Updates multiple containers for a subscription at once",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscription",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["containers"],
+              "properties": {
+                "containers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["containerId", "status"],
+                    "properties": {
+                      "containerId": {
+                        "type": "string",
+                        "description": "ID of the container to update"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": ["active", "returned", "lost", "damaged"],
+                        "description": "New status for the container"
+                      },
+                      "statusDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date when the status changed"
+                      },
+                      "notes": {
+                        "type": "string",
+                        "description": "Notes about the status change"
+                      }
+                    }
+                  }
+                },
+                "processRefunds": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Whether to process refunds for returned containers"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Containers updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "updatedCount": {
+                    "type": "integer"
+                  },
+                  "failedCount": {
+                    "type": "integer"
+                  },
+                  "failedContainers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "containerId": {
+                          "type": "string"
+                        },
+                        "error": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscription not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

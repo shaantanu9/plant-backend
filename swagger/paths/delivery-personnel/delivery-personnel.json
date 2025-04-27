@@ -1,0 +1,243 @@
+{
+  "get": {
+    "tags": ["DeliveryPersonnel"],
+    "summary": "Get all delivery personnel",
+    "description": "Retrieves a list of all delivery personnel in the system",
+    "operationId": "getDeliveryPersonnel",
+    "security": [{ "BearerAuth": [] }],
+    "parameters": [
+      {
+        "name": "page",
+        "in": "query",
+        "description": "Page number",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "description": "Number of items per page",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "description": "Field to sort by",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["createdAt", "updatedAt", "zone"],
+          "default": "createdAt"
+        }
+      },
+      {
+        "name": "order",
+        "in": "query",
+        "description": "Sort order",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["asc", "desc"],
+          "default": "desc"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Successful operation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeliveryPersonnel"
+                  }
+                },
+                "pagination": {
+                  "$ref": "#/components/schemas/Pagination"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Insufficient permissions",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "post": {
+    "tags": ["DeliveryPersonnel"],
+    "summary": "Create a new delivery personnel",
+    "description": "Creates a new delivery personnel in the system",
+    "operationId": "createDeliveryPersonnel",
+    "security": [{ "BearerAuth": [] }],
+    "requestBody": {
+      "description": "Delivery personnel object that needs to be added to the system",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["userId", "zone"],
+            "properties": {
+              "userId": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Reference to the associated User record",
+                "example": "550e8400-e29b-41d4-a716-446655440000"
+              },
+              "zone": {
+                "type": "string",
+                "description": "Primary delivery zone assignment",
+                "example": "Downtown"
+              },
+              "vehicleType": {
+                "type": "string",
+                "enum": ["bicycle", "motorcycle", "car", "van", "truck", "other", "bike"],
+                "description": "Type of vehicle used for deliveries",
+                "example": "motorcycle"
+              },
+              "vehicleNumber": {
+                "type": "string",
+                "description": "Registration/identification number of the vehicle",
+                "example": "MH-01-AB-1234"
+              },
+              "availableDays": {
+                "type": "array",
+                "description": "Days of the week when the personnel is available",
+                "items": {
+                  "type": "string",
+                  "enum": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+                },
+                "example": ["Mon", "Wed", "Fri"]
+              },
+              "availableTimeSlots": {
+                "type": "array",
+                "description": "Time slots when the personnel is available",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "description": "Start time in HH:MM format",
+                      "example": "09:00"
+                    },
+                    "end": {
+                      "type": "string",
+                      "description": "End time in HH:MM format",
+                      "example": "17:00"
+                    }
+                  }
+                }
+              },
+              "maxDeliveriesPerDay": {
+                "type": "integer",
+                "description": "Maximum number of deliveries the personnel can handle per day",
+                "example": 30
+              },
+              "primaryZones": {
+                "type": "array",
+                "description": "Primary service zones for this personnel",
+                "items": {
+                  "type": "string"
+                },
+                "example": ["Downtown", "Midtown"]
+              },
+              "secondaryZones": {
+                "type": "array",
+                "description": "Secondary service zones for this personnel",
+                "items": {
+                  "type": "string"
+                },
+                "example": ["Uptown", "Suburb"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": {
+        "description": "Delivery personnel created successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DeliveryPersonnel"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Invalid input",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Insufficient permissions",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "409": {
+        "description": "User already assigned as delivery personnel",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

@@ -1,0 +1,292 @@
+{
+  "/reports/{reportId}/subscribers": {
+    "post": {
+      "tags": ["Reports"],
+      "summary": "Add subscriber to report",
+      "description": "Adds a subscriber to a specific report",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "reportId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the report",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["subscriberId"],
+              "properties": {
+                "subscriberId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "ID of the subscriber to add to the report"
+                },
+                "metrics": {
+                  "type": "object",
+                  "description": "Additional metrics related to the subscriber",
+                  "properties": {
+                    "containersHeld": {
+                      "type": "integer",
+                      "description": "Number of containers currently held"
+                    },
+                    "totalReceived": {
+                      "type": "integer",
+                      "description": "Total number of containers received"
+                    },
+                    "totalReturned": {
+                      "type": "integer",
+                      "description": "Total number of containers returned"
+                    }
+                  }
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Additional notes about the subscriber"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Subscriber added to report successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Report"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Report or subscriber not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "Subscriber already exists in report",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/reports/{reportId}/subscribers/{subscriberId}": {
+    "put": {
+      "tags": ["Reports"],
+      "summary": "Update subscriber detail in report",
+      "description": "Updates details about a specific subscriber in a report",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "reportId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the report",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "subscriberId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscriber",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "metrics": {
+                  "type": "object",
+                  "description": "Updated metrics related to the subscriber",
+                  "properties": {
+                    "containersHeld": {
+                      "type": "integer",
+                      "description": "Number of containers currently held"
+                    },
+                    "totalReceived": {
+                      "type": "integer",
+                      "description": "Total number of containers received"
+                    },
+                    "totalReturned": {
+                      "type": "integer",
+                      "description": "Total number of containers returned"
+                    }
+                  }
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Updated notes about the subscriber"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Subscriber details updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Report"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Report or subscriber not found in report",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["Reports"],
+      "summary": "Remove subscriber from report",
+      "description": "Removes a subscriber from a specific report",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "reportId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the report",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "subscriberId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscriber to remove",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Subscriber removed from report successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Report"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Report or subscriber not found in report",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

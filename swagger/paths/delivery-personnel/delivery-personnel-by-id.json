@@ -1,0 +1,118 @@
+{
+  "get": {
+    "tags": ["DeliveryPersonnel"],
+    "summary": "Get delivery personnel by ID",
+    "description": "Retrieve detailed information about a specific delivery personnel by ID",
+    "operationId": "getDeliveryPersonnelById",
+    "security": [{ "BearerAuth": [] }],
+    "parameters": [
+      {
+        "name": "personnelId",
+        "in": "path",
+        "required": true,
+        "description": "ID of the delivery personnel to retrieve",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Successful operation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DeliveryPersonnel"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Delivery personnel not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "delete": {
+    "tags": ["DeliveryPersonnel"],
+    "summary": "Delete a delivery personnel",
+    "description": "Remove a delivery personnel from the system",
+    "operationId": "removeDeliveryPersonnel",
+    "security": [{ "BearerAuth": [] }],
+    "parameters": [
+      {
+        "name": "personnelId",
+        "in": "path",
+        "required": true,
+        "description": "ID of the delivery personnel to delete",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Delivery personnel deleted successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Delivery personnel deleted successfully"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Delivery personnel not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Insufficient permissions",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

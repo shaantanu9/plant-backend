@@ -1,0 +1,380 @@
+{
+  "/subscriptions/{id}/delivery-days": {
+    "put": {
+      "tags": ["Subscriptions"],
+      "summary": "Update delivery days",
+      "description": "Updates the delivery days for a subscription",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscription to update",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["deliveryDays"],
+              "properties": {
+                "deliveryDays": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+                  },
+                  "description": "Days of the week for delivery"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Delivery days updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subscription"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid delivery days",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscription not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscriptions/{id}/time-slot": {
+    "put": {
+      "tags": ["Subscriptions"],
+      "summary": "Update time slot",
+      "description": "Updates the preferred time slot for a subscription",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscription to update",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["deliveryTimeSlot"],
+              "properties": {
+                "deliveryTimeSlot": {
+                  "type": "object",
+                  "properties": {
+                    "from": {
+                      "type": "string",
+                      "description": "Start time in HH:MM format",
+                      "example": "09:00"
+                    },
+                    "to": {
+                      "type": "string",
+                      "description": "End time in HH:MM format",
+                      "example": "12:00"
+                    }
+                  },
+                  "description": "Preferred time slot for delivery"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Time slot updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subscription"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid time slot",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscription not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscriptions/{id}/date-range": {
+    "put": {
+      "tags": ["Subscriptions"],
+      "summary": "Update date range",
+      "description": "Updates the start and end dates for a subscription",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscription to update",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "startDate": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "New start date of the subscription"
+                },
+                "endDate": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "New end date of the subscription (null for open-ended)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Date range updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subscription"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid date range",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscription not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscriptions/{id}/extend": {
+    "put": {
+      "tags": ["Subscriptions"],
+      "summary": "Extend subscription",
+      "description": "Extends a subscription by changing its end date",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscription to extend",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["extension"],
+              "properties": {
+                "extension": {
+                  "type": "object",
+                  "required": ["type", "value"],
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": ["days", "weeks", "months", "until"],
+                      "description": "Type of extension"
+                    },
+                    "value": {
+                      "oneOf": [
+                        {
+                          "type": "integer",
+                          "description": "Number of days/weeks/months to extend (when type is days, weeks, or months)"
+                        },
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Date to extend until (when type is until)"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "keepSamePrice": {
+                  "type": "boolean",
+                  "description": "Whether to keep the same price for the extension",
+                  "default": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Subscription extended successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subscription"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid extension parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscription not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

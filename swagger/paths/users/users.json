@@ -1,0 +1,209 @@
+{
+  "get": {
+    "tags": ["User"],
+    "summary": "Get all users",
+    "description": "Retrieves a list of all users in the system",
+    "operationId": "getUsers",
+    "security": [
+      {
+        "BearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "name": "page",
+        "in": "query",
+        "description": "Page number",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "description": "Number of items per page",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "description": "Field to sort by",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["name", "email", "createdAt", "updatedAt"],
+          "default": "createdAt"
+        }
+      },
+      {
+        "name": "order",
+        "in": "query",
+        "description": "Sort order",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["asc", "desc"],
+          "default": "desc"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Successful operation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "../../schemas/User.json"
+                  }
+                },
+                "pagination": {
+                  "$ref": "../../schemas/index.json#/Pagination"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/Error.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Insufficient permissions",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/Error.json"
+            }
+          }
+        }
+      }
+    }
+  },
+  "post": {
+    "tags": ["User"],
+    "summary": "Create a new user",
+    "description": "Creates a new user in the system",
+    "operationId": "createUser",
+    "security": [
+      {
+        "BearerAuth": []
+      }
+    ],
+    "requestBody": {
+      "description": "User object that needs to be added to the system",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["name", "email", "password"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "John Doe"
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "example": "john.doe@example.com"
+              },
+              "password": {
+                "type": "string",
+                "format": "password",
+                "minLength": 8,
+                "example": "securepassword123"
+              },
+              "phone": {
+                "type": "string",
+                "example": "+1234567890"
+              },
+              "address": {
+                "type": "string",
+                "example": "123 Main St, Anytown, USA"
+              },
+              "role": {
+                "type": "string",
+                "enum": ["user", "admin", "superadmin"],
+                "default": "user",
+                "example": "user"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": {
+        "description": "User created successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/User.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Invalid input",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/Error.json"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/Error.json"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Insufficient permissions",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/Error.json"
+            }
+          }
+        }
+      },
+      "409": {
+        "description": "Email already in use",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/Error.json"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

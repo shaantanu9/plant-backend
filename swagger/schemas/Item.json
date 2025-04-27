@@ -1,0 +1,163 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "example": "550e8400-e29b-41d4-a716-446655440010"
+    },
+    "adminId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Reference to the admin user who offers this item",
+      "example": "550e8400-e29b-41d4-a716-446655440001"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the item",
+      "example": "Organic Milk"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the item",
+      "example": "Fresh organic whole milk from local grass-fed cows"
+    },
+    "image": {
+      "type": "string",
+      "description": "URL to the item's image",
+      "example": "https://example.com/images/organic-milk.jpg"
+    },
+    "category": {
+      "type": "string",
+      "description": "Category of the item",
+      "example": "Dairy"
+    },
+    "containerType": {
+      "type": "string",
+      "description": "Type of container used for this item",
+      "example": "milk-jar"
+    },
+    "requiresReturn": {
+      "type": "boolean",
+      "description": "Whether the container needs to be returned",
+      "example": true
+    },
+    "depositAmount": {
+      "type": "number",
+      "description": "Deposit amount for the container if applicable",
+      "example": 5.00
+    },
+    "price": {
+      "type": "number",
+      "description": "Regular price of the item",
+      "example": 3.99
+    },
+    "discountedPrice": {
+      "type": "number",
+      "description": "Discounted price if applicable",
+      "example": 2.99
+    },
+    "taxRate": {
+      "type": "number",
+      "description": "Tax rate applicable to this item as a percentage",
+      "example": 8.5
+    },
+    "nutritionalInfo": {
+      "type": "object",
+      "description": "Nutritional information for food items",
+      "properties": {
+        "calories": {
+          "type": "number",
+          "description": "Calories per serving",
+          "example": 150
+        },
+        "proteins": {
+          "type": "number",
+          "description": "Proteins in grams",
+          "example": 8
+        },
+        "carbs": {
+          "type": "number",
+          "description": "Carbohydrates in grams",
+          "example": 12
+        },
+        "fats": {
+          "type": "number",
+          "description": "Fats in grams",
+          "example": 8
+        },
+        "allergens": {
+          "type": "array",
+          "description": "List of allergens present in the item",
+          "items": {
+            "type": "string"
+          },
+          "example": ["milk", "lactose"]
+        }
+      }
+    },
+    "isActive": {
+      "type": "boolean",
+      "description": "Whether the item is currently active",
+      "example": true
+    },
+    "isVegetarian": {
+      "type": "boolean",
+      "description": "Whether the item is vegetarian",
+      "example": true
+    },
+    "isVegan": {
+      "type": "boolean",
+      "description": "Whether the item is vegan",
+      "example": false
+    },
+    "isGlutenFree": {
+      "type": "boolean",
+      "description": "Whether the item is gluten-free",
+      "example": true
+    },
+    "availableFrequencies": {
+      "type": "array",
+      "description": "Available subscription frequencies for this item",
+      "items": {
+        "type": "object",
+        "properties": {
+          "frequency": {
+            "type": "string",
+            "enum": ["daily", "alternate-days", "weekly", "monthly"],
+            "description": "Subscription frequency option",
+            "example": "weekly"
+          },
+          "price": {
+            "type": "number",
+            "description": "Special price for this frequency if different from regular price",
+            "example": 3.49
+          }
+        }
+      }
+    },
+    "inStock": {
+      "type": "boolean",
+      "description": "Whether the item is currently in stock",
+      "example": true
+    },
+    "stockQuantity": {
+      "type": "number",
+      "description": "Current stock quantity",
+      "example": 100
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the item was created",
+      "example": "2023-01-01T12:00:00Z"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the item was last updated",
+      "example": "2023-01-10T15:30:00Z"
+    }
+  },
+  "required": ["id", "adminId", "name", "containerType", "price", "createdAt", "updatedAt"]
+} 

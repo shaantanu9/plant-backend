@@ -1,0 +1,103 @@
+{
+  "get": {
+    "tags": ["User"],
+    "summary": "Get user profile",
+    "description": "Retrieve the profile of the currently authenticated user",
+    "operationId": "getUserProfile",
+    "security": [
+      {
+        "BearerAuth": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "User profile retrieved successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/User.json"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/Error.json"
+            }
+          }
+        }
+      }
+    }
+  },
+  "put": {
+    "tags": ["User"],
+    "summary": "Update user profile",
+    "description": "Update the profile of the currently authenticated user",
+    "operationId": "updateUserProfile",
+    "security": [
+      {
+        "BearerAuth": []
+      }
+    ],
+    "requestBody": {
+      "description": "User profile data to update",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "John Doe"
+              },
+              "phone": {
+                "type": "string",
+                "example": "+1234567890"
+              },
+              "address": {
+                "type": "string",
+                "example": "123 Main St, Anytown, USA"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Profile updated successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/User.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Invalid input",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/Error.json"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/Error.json"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

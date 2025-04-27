@@ -1,0 +1,160 @@
+{
+  "post": {
+    "tags": ["DeliveryPersonnel", "Subscriber"],
+    "summary": "Assign multiple subscribers to delivery personnel",
+    "description": "Assigns multiple subscribers to a specific delivery personnel",
+    "operationId": "assignSubscribers",
+    "security": [{ "BearerAuth": [] }],
+    "parameters": [
+      {
+        "name": "personnelId",
+        "in": "path",
+        "required": true,
+        "description": "ID of the delivery personnel",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "requestBody": {
+      "description": "Subscriber assignment information",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["subscriberIds"],
+            "properties": {
+              "subscriberIds": {
+                "type": "array",
+                "description": "List of subscriber IDs to assign",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "example": ["550e8400-e29b-41d4-a716-446655440003", "550e8400-e29b-41d4-a716-446655440004"]
+              },
+              "overrideExisting": {
+                "type": "boolean",
+                "description": "Whether to override existing assignments for these subscribers",
+                "example": false
+              },
+              "notifySubscribers": {
+                "type": "boolean",
+                "description": "Whether to notify subscribers about the new assignment",
+                "example": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Subscribers assigned successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Subscribers assigned successfully"
+                },
+                "assignedCount": {
+                  "type": "integer",
+                  "example": 2
+                },
+                "personnel": {
+                  "$ref": "#/components/schemas/DeliveryPersonnel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Invalid input",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Delivery personnel or subscribers not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Insufficient permissions",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "409": {
+        "description": "Some subscribers already assigned to other personnel",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Some subscribers already assigned to other personnel"
+                },
+                "conflictingSubscribers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "subscriberId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "550e8400-e29b-41d4-a716-446655440003"
+                      },
+                      "currentPersonnelId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "550e8400-e29b-41d4-a716-446655440007"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

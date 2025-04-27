@@ -1,0 +1,108 @@
+{
+  "get": {
+    "tags": ["Delivery"],
+    "summary": "Get delivery by ID",
+    "description": "Retrieve a specific delivery by its ID",
+    "operationId": "getDeliveryById",
+    "security": [{ "BearerAuth": [] }],
+    "parameters": [
+      {
+        "name": "deliveryId",
+        "in": "path",
+        "required": true,
+        "description": "ID of the delivery to retrieve",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Successful operation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Delivery"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Delivery not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "delete": {
+    "tags": ["Delivery"],
+    "summary": "Delete a delivery",
+    "description": "Remove a delivery by its ID",
+    "operationId": "removeDelivery",
+    "security": [{ "BearerAuth": [] }],
+    "parameters": [
+      {
+        "name": "deliveryId",
+        "in": "path",
+        "required": true,
+        "description": "ID of the delivery to delete",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Delivery deleted successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Delivery deleted successfully"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Delivery not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

@@ -1,0 +1,60 @@
+{
+  "/admin/logout": {
+    "post": {
+      "tags": ["Admin"],
+      "summary": "Logout admin",
+      "description": "Logout the currently authenticated admin user by invalidating their access token",
+      "operationId": "logoutAdmin",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": false,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "refreshToken": {
+                  "type": "string",
+                  "description": "Optional refresh token to invalidate along with the access token",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Logout successful",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "Logged out successfully"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized - Invalid or expired token",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

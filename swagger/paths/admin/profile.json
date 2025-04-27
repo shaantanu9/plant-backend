@@ -1,0 +1,213 @@
+{
+  "/admin/profile": {
+    "get": {
+      "tags": ["Admin"],
+      "summary": "Get admin profile",
+      "description": "Retrieve the profile of the currently authenticated admin",
+      "operationId": "getAdminProfile",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Admin profile retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Admin.json"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["Admin"],
+      "summary": "Update admin profile",
+      "description": "Update the profile of the currently authenticated admin",
+      "operationId": "updateAdminProfile",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "description": "Admin profile data to update",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Admin User"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "+1234567890"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Profile updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Admin.json"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid input",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/admin/profile/avatar": {
+    "post": {
+      "tags": ["Admin"],
+      "summary": "Upload admin avatar",
+      "description": "Upload a profile picture for the currently authenticated admin",
+      "operationId": "uploadAdminAvatar",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "avatar": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "Avatar image file"
+                }
+              },
+              "required": ["avatar"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Avatar uploaded successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatarUrl": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://example.com/avatars/admin123.jpg"
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Avatar uploaded successfully"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid file format or size",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["Admin"],
+      "summary": "Remove admin avatar",
+      "description": "Remove the profile picture of the currently authenticated admin",
+      "operationId": "removeAdminAvatar",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Avatar removed successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "Avatar removed successfully"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

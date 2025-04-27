@@ -1,0 +1,864 @@
+{
+  "/subscribers/{subscriberId}/toggle-active": {
+    "put": {
+      "tags": ["Subscribers"],
+      "summary": "Toggle subscriber active status",
+      "description": "Activates or deactivates a subscriber",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "subscriberId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscriber",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Subscriber status updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "isActive": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Subscriber activated successfully"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscriber not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscribers/{subscriberId}/containers": {
+    "get": {
+      "tags": ["Subscribers"],
+      "summary": "Get subscriber container details",
+      "description": "Retrieves details about a subscriber's container allocation",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "subscriberId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscriber",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Container details retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "containerCount": {
+                    "type": "integer",
+                    "example": 25
+                  },
+                  "pendingContainers": {
+                    "type": "integer",
+                    "example": 5
+                  },
+                  "depositBalance": {
+                    "type": "number",
+                    "format": "float",
+                    "example": 50.00
+                  },
+                  "containerHistory": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "date": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2023-06-15T10:30:00Z"
+                        },
+                        "action": {
+                          "type": "string",
+                          "enum": ["added", "returned", "damaged"],
+                          "example": "added"
+                        },
+                        "count": {
+                          "type": "integer",
+                          "example": 3
+                        },
+                        "notes": {
+                          "type": "string",
+                          "example": "Initial container allocation"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscriber not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["Subscribers"],
+      "summary": "Update subscriber container count",
+      "description": "Updates a subscriber's container allocation",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "subscriberId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscriber",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["action"],
+              "properties": {
+                "action": {
+                  "type": "string",
+                  "enum": ["add", "return", "damage"],
+                  "description": "Action to perform on containers"
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Number of containers to add/return/mark as damaged"
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Notes about this container update"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Container count updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "containerCount": {
+                    "type": "integer",
+                    "example": 28
+                  },
+                  "pendingContainers": {
+                    "type": "integer",
+                    "example": 8
+                  },
+                  "depositBalance": {
+                    "type": "number",
+                    "format": "float",
+                    "example": 60.00
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Container count updated successfully"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscriber not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscribers/{subscriberId}/assign": {
+    "put": {
+      "tags": ["Subscribers"],
+      "summary": "Assign delivery personnel",
+      "description": "Assigns a delivery personnel to a subscriber",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "subscriberId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscriber",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["personnelId"],
+              "properties": {
+                "personnelId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "ID of the delivery personnel to assign"
+                },
+                "permanent": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Whether this is a permanent assignment"
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Additional notes about the assignment"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Delivery personnel assigned successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Delivery personnel assigned successfully"
+                  },
+                  "assignedTo": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "5f8d0d55b54764429c1bc2b9"
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscriber or delivery personnel not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscribers/{subscriberId}/unassign": {
+    "put": {
+      "tags": ["Subscribers"],
+      "summary": "Unassign delivery personnel",
+      "description": "Removes the assigned delivery personnel from a subscriber",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "subscriberId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscriber",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Delivery personnel unassigned successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Delivery personnel unassigned successfully"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscriber not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscribers/{subscriberId}/deposit": {
+    "put": {
+      "tags": ["Subscribers"],
+      "summary": "Update deposit balance",
+      "description": "Updates a subscriber's container deposit balance",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "subscriberId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscriber",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["action", "amount"],
+              "properties": {
+                "action": {
+                  "type": "string",
+                  "enum": ["add", "deduct", "refund"],
+                  "description": "Action to perform on deposit balance"
+                },
+                "amount": {
+                  "type": "number",
+                  "format": "float",
+                  "description": "Amount to add or deduct from deposit balance"
+                },
+                "reason": {
+                  "type": "string",
+                  "description": "Reason for updating the deposit balance"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Deposit balance updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "depositBalance": {
+                    "type": "number",
+                    "format": "float",
+                    "example": 70.00
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Deposit balance updated successfully"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscriber not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscribers/{subscriberId}/preferences": {
+    "put": {
+      "tags": ["Subscribers"],
+      "summary": "Update subscriber preferences",
+      "description": "Updates a subscriber's notification and delivery preferences",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "subscriberId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscriber",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "reminderEnabled": {
+                  "type": "boolean",
+                  "description": "Whether delivery reminders are enabled"
+                },
+                "notificationPreferences": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "boolean",
+                      "description": "Whether to send email notifications"
+                    },
+                    "sms": {
+                      "type": "boolean",
+                      "description": "Whether to send SMS notifications"
+                    },
+                    "push": {
+                      "type": "boolean",
+                      "description": "Whether to send push notifications"
+                    },
+                    "reminderTime": {
+                      "type": "string",
+                      "description": "When to send delivery reminders (hours before delivery)"
+                    }
+                  }
+                },
+                "swapEnabled": {
+                  "type": "boolean",
+                  "description": "Whether container swaps are enabled"
+                },
+                "preferredTimeSlot": {
+                  "type": "string",
+                  "description": "Preferred time for deliveries"
+                },
+                "deliveryInstructions": {
+                  "type": "string",
+                  "description": "Special instructions for delivery"
+                },
+                "alternateRecipient": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Name of alternate recipient"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "description": "Phone number of alternate recipient"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Preferences updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Preferences updated successfully"
+                  },
+                  "preferences": {
+                    "type": "object",
+                    "properties": {
+                      "reminderEnabled": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "notificationPreferences": {
+                        "type": "object",
+                        "properties": {
+                          "email": {
+                            "type": "boolean",
+                            "example": true
+                          },
+                          "sms": {
+                            "type": "boolean",
+                            "example": true
+                          },
+                          "push": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "reminderTime": {
+                            "type": "string",
+                            "example": "24h"
+                          }
+                        }
+                      },
+                      "swapEnabled": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "preferredTimeSlot": {
+                        "type": "string",
+                        "example": "afternoon"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscriber not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscribers/{subscriberId}/delivery-days": {
+    "put": {
+      "tags": ["Subscribers"],
+      "summary": "Update delivery days",
+      "description": "Updates a subscriber's scheduled delivery days",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "subscriberId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscriber",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["deliveryDays"],
+              "properties": {
+                "deliveryDays": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+                  },
+                  "description": "Days for scheduled deliveries"
+                },
+                "effectiveDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Date when the new schedule becomes effective"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Delivery days updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "deliveryDays": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["Mon", "Wed", "Fri"]
+                    }
+                  },
+                  "effectiveDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2023-07-01"
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Delivery days updated successfully"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscriber not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

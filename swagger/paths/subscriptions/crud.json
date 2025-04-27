@@ -1,0 +1,631 @@
+{
+  "/subscriptions": {
+    "post": {
+      "tags": ["Subscriptions"],
+      "summary": "Create subscription",
+      "description": "Creates a new subscription",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["subscriberId", "itemId", "frequency", "deliveryAddress", "deliveryTimeSlot", "deliveryDays"],
+              "properties": {
+                "subscriberId": {
+                  "type": "string",
+                  "description": "ID of the subscriber"
+                },
+                "itemId": {
+                  "type": "string",
+                  "description": "ID of the item being subscribed to"
+                },
+                "adminId": {
+                  "type": "string",
+                  "description": "ID of the admin managing the subscription"
+                },
+                "frequency": {
+                  "type": "string",
+                  "enum": ["daily", "weekly", "biweekly", "monthly"],
+                  "description": "Frequency of the subscription"
+                },
+                "quantity": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "default": 1,
+                  "description": "Quantity of items per delivery"
+                },
+                "startDate": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Start date of the subscription"
+                },
+                "endDate": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "End date of the subscription (null for open-ended)"
+                },
+                "deliveryAddress": {
+                  "type": "object",
+                  "properties": {
+                    "street": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "zipCode": {
+                      "type": "string"
+                    },
+                    "country": {
+                      "type": "string",
+                      "default": "USA"
+                    },
+                    "coordinates": {
+                      "type": "object",
+                      "properties": {
+                        "latitude": {
+                          "type": "number"
+                        },
+                        "longitude": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "notes": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "deliveryTimeSlot": {
+                  "type": "object",
+                  "properties": {
+                    "from": {
+                      "type": "string",
+                      "description": "Start time in HH:MM format",
+                      "example": "09:00"
+                    },
+                    "to": {
+                      "type": "string",
+                      "description": "End time in HH:MM format",
+                      "example": "12:00"
+                    }
+                  }
+                },
+                "deliveryDays": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+                  }
+                },
+                "billingCycle": {
+                  "type": "object",
+                  "properties": {
+                    "frequency": {
+                      "type": "string",
+                      "enum": ["weekly", "biweekly", "monthly"],
+                      "default": "monthly"
+                    },
+                    "startDate": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                },
+                "paymentMethod": {
+                  "type": "string",
+                  "description": "ID of the payment method"
+                },
+                "price": {
+                  "type": "object",
+                  "properties": {
+                    "basePrice": {
+                      "type": "number"
+                    },
+                    "discount": {
+                      "type": "number",
+                      "default": 0
+                    },
+                    "tax": {
+                      "type": "number",
+                      "default": 0
+                    },
+                    "deliveryFee": {
+                      "type": "number",
+                      "default": 0
+                    },
+                    "depositFee": {
+                      "type": "number",
+                      "default": 0
+                    },
+                    "total": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Additional notes for the subscription"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Subscription created successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subscription"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "get": {
+      "tags": ["Subscriptions"],
+      "summary": "Get all subscriptions",
+      "description": "Retrieve a list of all subscriptions with pagination support",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "description": "Page number",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 1,
+            "minimum": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "Number of items per page",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        {
+          "name": "sortBy",
+          "in": "query",
+          "description": "Field to sort by",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["createdAt", "updatedAt", "startDate", "endDate", "status"],
+            "default": "createdAt"
+          }
+        },
+        {
+          "name": "sortDirection",
+          "in": "query",
+          "description": "Sort direction",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["asc", "desc"],
+            "default": "desc"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of subscriptions",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "../../schemas/Subscription.json"
+                    }
+                  },
+                  "pagination": {
+                    "type": "object",
+                    "properties": {
+                      "total": {
+                        "type": "integer",
+                        "example": 100
+                      },
+                      "totalPages": {
+                        "type": "integer",
+                        "example": 10
+                      },
+                      "currentPage": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "limit": {
+                        "type": "integer",
+                        "example": 10
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "Forbidden",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Server Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/Error.json"
+              }
+            }
+          }
+        }
+      },
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ]
+    }
+  },
+  "/subscriptions/{id}": {
+    "get": {
+      "tags": ["Subscriptions"],
+      "summary": "Get subscription by ID",
+      "description": "Retrieves a subscription by its ID",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscription to retrieve",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Subscription details",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subscription"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscription not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["Subscriptions"],
+      "summary": "Update subscription",
+      "description": "Updates an existing subscription",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscription to update",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "quantity": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Quantity of items per delivery"
+                },
+                "deliveryAddress": {
+                  "type": "object",
+                  "properties": {
+                    "street": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "zipCode": {
+                      "type": "string"
+                    },
+                    "country": {
+                      "type": "string"
+                    },
+                    "coordinates": {
+                      "type": "object",
+                      "properties": {
+                        "latitude": {
+                          "type": "number"
+                        },
+                        "longitude": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "notes": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Additional notes for the subscription"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Subscription updated successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subscription"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid request body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscription not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["Subscriptions"],
+      "summary": "Delete subscription",
+      "description": "Deletes a subscription by ID (hard delete)",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscription to delete",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Subscription deleted successfully"
+        },
+        "404": {
+          "description": "Subscription not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/subscriptions/{id}/details": {
+    "get": {
+      "tags": ["Subscriptions"],
+      "summary": "Get detailed subscription information",
+      "description": "Retrieves detailed information about a subscription, including related container and delivery data",
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the subscription to retrieve detailed information for",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Subscription details retrieved successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Subscription"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "subscriber": {
+                        "$ref": "#/components/schemas/Subscriber"
+                      },
+                      "item": {
+                        "$ref": "#/components/schemas/Item"
+                      },
+                      "containers": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/Container"
+                        }
+                      },
+                      "upcomingDeliveries": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/Delivery"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Subscription not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

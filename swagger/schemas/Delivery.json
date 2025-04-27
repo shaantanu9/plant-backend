@@ -1,0 +1,175 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the delivery"
+    },
+    "status": {
+      "type": "string",
+      "description": "Current status of the delivery",
+      "enum": ["pending", "in_transit", "delivered", "partial", "canceled", "missed"]
+    },
+    "scheduledDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Scheduled date and time for the delivery"
+    },
+    "completedDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time when the delivery was completed"
+    },
+    "adminId": {
+      "type": "string",
+      "description": "ID of the admin who created or is managing the delivery"
+    },
+    "personnelId": {
+      "type": "string",
+      "description": "ID of the delivery personnel assigned to this delivery"
+    },
+    "subscriptions": {
+      "type": "array",
+      "description": "List of subscriptions included in this delivery",
+      "items": {
+        "type": "object",
+        "properties": {
+          "subscriptionId": {
+            "type": "string",
+            "description": "ID of the subscription"
+          },
+          "fulfilled": {
+            "type": "boolean",
+            "description": "Whether the subscription has been fulfilled in this delivery"
+          }
+        }
+      }
+    },
+    "containersDelivered": {
+      "type": "array",
+      "description": "Containers delivered to subscribers",
+      "items": {
+        "type": "object",
+        "properties": {
+          "containerId": {
+            "type": "string",
+            "description": "ID of the delivered container"
+          },
+          "subscriberId": {
+            "type": "string",
+            "description": "ID of the subscriber who received the container"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time when the container was delivered"
+          }
+        }
+      }
+    },
+    "containersReturned": {
+      "type": "array",
+      "description": "Containers returned by subscribers",
+      "items": {
+        "type": "object",
+        "properties": {
+          "containerId": {
+            "type": "string",
+            "description": "ID of the returned container"
+          },
+          "subscriberId": {
+            "type": "string",
+            "description": "ID of the subscriber who returned the container"
+          },
+          "condition": {
+            "type": "string",
+            "enum": ["new", "good", "damaged", "unusable"],
+            "description": "Condition of the returned container"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time when the container was returned"
+          }
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "description": "Delivery verification details",
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["signature", "photo", "code"],
+          "description": "Method used to verify the delivery"
+        },
+        "data": {
+          "type": "string",
+          "description": "Verification data (base64 signature, image URL, or verification code)"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Time when the delivery was verified"
+        }
+      }
+    },
+    "payment": {
+      "type": "object",
+      "description": "Payment information for the delivery",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pending", "collected", "not_required"],
+          "description": "Status of payment for this delivery"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount collected or to be collected"
+        },
+        "method": {
+          "type": "string",
+          "enum": ["cash", "online", "credit_card"],
+          "description": "Payment method used"
+        }
+      }
+    },
+    "notes": {
+      "type": "object",
+      "description": "Various notes related to the delivery",
+      "properties": {
+        "subscriber": {
+          "type": "string",
+          "description": "Notes provided by the subscriber"
+        },
+        "personnel": {
+          "type": "string",
+          "description": "Notes provided by the delivery personnel"
+        },
+        "admin": {
+          "type": "string",
+          "description": "Notes provided by the admin"
+        }
+      }
+    },
+    "routeOrder": {
+      "type": "integer",
+      "description": "Order of this delivery in the route"
+    },
+    "distance": {
+      "type": "number",
+      "description": "Estimated distance for this delivery in kilometers"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time when the delivery was created"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time when the delivery was last updated"
+    }
+  },
+  "required": ["id", "status", "scheduledDate", "adminId", "personnelId", "createdAt", "updatedAt"]
+} 

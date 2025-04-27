@@ -1,0 +1,10 @@
+{
+  "get": {
+    "description": "Placeholder for future implementation",
+    "responses": {
+      "200": {
+        "description": "Successful operation"
+      }
+    }
+  }
+}

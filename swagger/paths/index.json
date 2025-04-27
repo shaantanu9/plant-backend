@@ -1,0 +1,530 @@
+{
+  "/containers": {
+    "$ref": "./containers/crud.json#/~1containers"
+  },
+  "/containers/{containerId}": {
+    "$ref": "./containers/crud.json#/~1containers~1{containerId}"
+  },
+  "/containers/bulk": {
+    "$ref": "./containers/crud.json#/~1containers~1bulk"
+  },
+  "/containers/bulk/{containerIds}": {
+    "$ref": "./containers/crud.json#/~1containers~1bulk~1{containerIds}"
+  },
+  "/containers/status/{status}": {
+    "$ref": "./containers/filters.json#/~1containers~1status~1{status}"
+  },
+  "/containers/type/{type}": {
+    "$ref": "./containers/filters.json#/~1containers~1type~1{type}"
+  },
+  "/containers/location/{location}": {
+    "$ref": "./containers/filters.json#/~1containers~1location~1{location}"
+  },
+  "/containers/admin/{adminId}": {
+    "$ref": "./containers/filters.json#/~1containers~1admin~1{adminId}"
+  },
+  "/containers/subscriber/{subscriberId}": {
+    "$ref": "./containers/filters.json#/~1containers~1subscriber~1{subscriberId}"
+  },
+  "/containers/search": {
+    "$ref": "./containers/filters.json#/~1containers~1search"
+  },
+  "/containers/stats": {
+    "$ref": "./containers/analytics.json#/~1containers~1stats"
+  },
+  "/containers/types": {
+    "$ref": "./containers/analytics.json#/~1containers~1types"
+  },
+  "/containers/locations": {
+    "$ref": "./containers/analytics.json#/~1containers~1locations"
+  },
+  "/containers/{containerId}/track": {
+    "$ref": "./containers/tracking.json#/~1containers~1{containerId}~1track"
+  },
+  "/containers/{containerId}/history": {
+    "$ref": "./containers/tracking.json#/~1containers~1{containerId}~1history"
+  },
+  "/containers/{containerId}/assign": {
+    "$ref": "./containers/management.json#/~1containers~1{containerId}~1assign"
+  },
+  "/containers/{containerId}/release": {
+    "$ref": "./containers/management.json#/~1containers~1{containerId}~1release"
+  },
+  "/containers/{containerId}/status": {
+    "$ref": "./containers/management.json#/~1containers~1{containerId}~1status"
+  },
+  "/containers/{containerId}/location": {
+    "$ref": "./containers/management.json#/~1containers~1{containerId}~1location"
+  },
+  "/containers/batch": {
+    "$ref": "./containers/batch.json#/~1containers~1batch"
+  },
+  "/containers/batch/{batchId}": {
+    "$ref": "./containers/batch.json#/~1containers~1batch~1{batchId}"
+  },
+  "/containers/stats/admin/{adminId}": {
+    "$ref": "./containers/container-stats-by-admin.json"
+  },
+  "/containers/{containerId}/transit-out": {
+    "$ref": "./containers/container-transit-out.json"
+  },
+  "/containers/{containerId}/with-subscriber": {
+    "$ref": "./containers/container-with-subscriber.json"
+  },
+  "/containers/{containerId}/transit-in": {
+    "$ref": "./containers/container-transit-in.json"
+  },
+  "/containers/{containerId}/returned": {
+    "$ref": "./containers/container-returned.json"
+  },
+  "/containers/{containerId}/maintenance": {
+    "$ref": "./containers/container-maintenance.json"
+  },
+  "/containers/{containerId}/cleaned": {
+    "$ref": "./containers/container-cleaned.json"
+  },
+  "/containers/{containerId}/condition": {
+    "$ref": "./containers/container-condition.json"
+  },
+  "/containers/{containerId}/under-maintenance": {
+    "$ref": "./containers/container-under-maintenance.json"
+  },
+  "/containers/{containerId}/inventory": {
+    "$ref": "./containers/container-inventory.json"
+  },
+  "/containers/{containerId}/deposit/collect": {
+    "$ref": "./containers/container-deposit-collect.json"
+  },
+  "/containers/{containerId}/deposit/refund": {
+    "$ref": "./containers/container-deposit-refund.json"
+  },
+  "/containers/{containerId}/lost": {
+    "$ref": "./containers/container-lost.json"
+  },
+  "/users": {
+    "$ref": "./users/users.json"
+  },
+  "/users/{userId}": {
+    "$ref": "./users/user-by-id.json"
+  },
+  "/users/register": {
+    "$ref": "./users/auth.json#/~1users~1register"
+  },
+  "/users/login": {
+    "$ref": "./users/login.json"
+  },
+  "/users/logout": {
+    "$ref": "./users/logout.json"
+  },
+  "/users/refresh-token": {
+    "$ref": "./users/auth.json#/~1users~1refresh-token"
+  },
+  "/users/forgot-password": {
+    "$ref": "./users/auth.json#/~1users~1forgot-password"
+  },
+  "/users/reset-password": {
+    "$ref": "./users/reset-password.json"
+  },
+  "/users/change-password": {
+    "$ref": "./users/change-password.json"
+  },
+  "/users/{userId}/validate-reset-token": {
+    "$ref": "./users/auth.json#/~1users~1{userId}~1validate-reset-token"
+  },
+  "/users/profile": {
+    "$ref": "./users/profile.json"
+  },
+  "/users/profile/avatar": {
+    "$ref": "./users/profile.json#/~1users~1profile~1avatar"
+  },
+  "/users/status/{status}": {
+    "$ref": "./users/listing.json#/~1users~1status~1{status}"
+  },
+  "/users/search": {
+    "$ref": "./users/listing.json#/~1users~1search"
+  },
+  "/users/role/{role}": {
+    "$ref": "./users/listing.json#/~1users~1role~1{role}"
+  },
+  "/users/verify-email": {
+    "$ref": "./users/verify-email.json"
+  },
+  "/users/{userId}/resend-verification": {
+    "$ref": "./users/auth.json#/~1users~1{userId}~1resend-verification"
+  },
+  "/items": {
+    "$ref": "./items/crud.json#/~1items"
+  },
+  "/items/{itemId}": {
+    "$ref": "./items/crud.json#/~1items~1{itemId}"
+  },
+  "/items/admin/{adminId}": {
+    "$ref": "./items/admin.json#/~1items~1admin~1{adminId}"
+  },
+  "/items/admin/{adminId}/active": {
+    "$ref": "./items/admin.json#/~1items~1admin~1{adminId}~1active"
+  },
+  "/items/admin/{adminId}/summary": {
+    "$ref": "./items/admin.json#/~1items~1admin~1{adminId}~1summary"
+  },
+  "/items/admin/{adminId}/count": {
+    "$ref": "./items/admin.json#/~1items~1admin~1{adminId}~1count"
+  },
+  "/items/admin/{adminId}/categories": {
+    "$ref": "./items/admin.json#/~1items~1admin~1{adminId}~1categories"
+  },
+  "/items/admin/{adminId}/category-count": {
+    "$ref": "./items/admin.json#/~1items~1admin~1{adminId}~1category-count"
+  },
+  "/reports": {
+    "$ref": "./reports/crud.json#/~1reports"
+  },
+  "/reports/{reportId}": {
+    "$ref": "./reports/crud.json#/~1reports~1{reportId}"
+  },
+  "/reports/listing": {
+    "$ref": "./reports/listing.json#/~1reports~1listing"
+  },
+  "/reports/generate/daily": {
+    "$ref": "./reports/generate.json#/~1reports~1generate~1daily"
+  },
+  "/reports/generate/weekly": {
+    "$ref": "./reports/generate.json#/~1reports~1generate~1weekly"
+  },
+  "/reports/generate/monthly": {
+    "$ref": "./reports/generate.json#/~1reports~1generate~1monthly"
+  },
+  "/reports/filter": {
+    "$ref": "./reports/filters.json#/~1reports~1filter"
+  },
+  "/reports/search": {
+    "$ref": "./reports/filters.json#/~1reports~1search"
+  },
+  "/reports/{reportId}/subscribers": {
+    "$ref": "./reports/subscribers.json#/~1reports~1{reportId}~1subscribers"
+  },
+  "/reports/{reportId}/subscribers/add": {
+    "$ref": "./reports/subscribers.json#/~1reports~1{reportId}~1subscribers~1add"
+  },
+  "/reports/{reportId}/subscribers/remove": {
+    "$ref": "./reports/subscribers.json#/~1reports~1{reportId}~1subscribers~1remove"
+  },
+  "/reports/analytics/trends": {
+    "$ref": "./reports/analysis.json#/~1reports~1analytics~1trends"
+  },
+  "/reports/analytics/comparison": {
+    "$ref": "./reports/analysis.json#/~1reports~1analytics~1comparison"
+  },
+  "/subscribers": {
+    "$ref": "./subscribers/crud.json#/~1subscribers"
+  },
+  "/subscribers/{subscriberId}": {
+    "$ref": "./subscribers/crud.json#/~1subscribers~1{subscriberId}"
+  },
+  "/subscribers/filter": {
+    "$ref": "./subscribers/filters.json#/~1subscribers~1filter"
+  },
+  "/subscribers/search": {
+    "$ref": "./subscribers/filters.json#/~1subscribers~1search"
+  },
+  "/subscribers/by-user/{userId}": {
+    "$ref": "./subscribers/filters.json#/~1subscribers~1by-user~1{userId}"
+  },
+  "/subscribers/zone/{zone}": {
+    "$ref": "./subscribers/filters.json#/~1subscribers~1zone~1{zone}"
+  },
+  "/subscribers/personnel/{personnelId}": {
+    "$ref": "./subscribers/filters.json#/~1subscribers~1personnel~1{personnelId}"
+  },
+  "/subscribers/subscription-type/{type}": {
+    "$ref": "./subscribers/filters.json#/~1subscribers~1subscription-type~1{type}"
+  },
+  "/subscribers/count": {
+    "$ref": "./subscribers/analytics.json#/~1subscribers~1count"
+  },
+  "/subscribers/count-by-zone": {
+    "$ref": "./subscribers/analytics.json#/~1subscribers~1count-by-zone"
+  },
+  "/subscribers/count-by-subscription-type": {
+    "$ref": "./subscribers/analytics.json#/~1subscribers~1count-by-subscription-type"
+  },
+  "/subscribers/count-by-admin/{adminId}": {
+    "$ref": "./subscribers/analytics.json#/~1subscribers~1count-by-admin~1{adminId}"
+  },
+  "/subscribers/count-by-delivery-day": {
+    "$ref": "./subscribers/analytics.json#/~1subscribers~1count-by-delivery-day"
+  },
+  "/subscribers/growth": {
+    "$ref": "./subscribers/analytics.json#/~1subscribers~1growth"
+  },
+  "/subscribers/retention": {
+    "$ref": "./subscribers/analytics.json#/~1subscribers~1retention"
+  },
+  "/subscribers/container-stats": {
+    "$ref": "./subscribers/analytics.json#/~1subscribers~1container-stats"
+  },
+  "/subscribers/zone-stats": {
+    "$ref": "./subscribers/analytics.json#/~1subscribers~1zone-stats"
+  },
+  "/subscribers/{subscriberId}/toggle-active": {
+    "$ref": "./subscribers/management.json#/~1subscribers~1{subscriberId}~1toggle-active"
+  },
+  "/subscribers/{subscriberId}/containers": {
+    "$ref": "./subscribers/management.json#/~1subscribers~1{subscriberId}~1containers"
+  },
+  "/subscribers/{subscriberId}/assign": {
+    "$ref": "./subscribers/management.json#/~1subscribers~1{subscriberId}~1assign"
+  },
+  "/subscribers/{subscriberId}/unassign": {
+    "$ref": "./subscribers/management.json#/~1subscribers~1{subscriberId}~1unassign"
+  },
+  "/subscribers/{subscriberId}/deposit": {
+    "$ref": "./subscribers/management.json#/~1subscribers~1{subscriberId}~1deposit"
+  },
+  "/subscribers/{subscriberId}/preferences": {
+    "$ref": "./subscribers/management.json#/~1subscribers~1{subscriberId}~1preferences"
+  },
+  "/subscribers/{subscriberId}/delivery-days": {
+    "$ref": "./subscribers/management.json#/~1subscribers~1{subscriberId}~1delivery-days"
+  },
+  "/admin": {
+    "$ref": "./admin/crud.json"
+  },
+  "/admin/login": {
+    "$ref": "./admin/auth.json#/~1admin~1login"
+  },
+  "/admin/refresh-token": {
+    "$ref": "./admin/auth.json#/~1admin~1refresh-token"
+  },
+  "/admin/forgot-password": {
+    "$ref": "./admin/auth.json#/~1admin~1forgot-password"
+  },
+  "/admin/reset-password": {
+    "$ref": "./admin/auth.json#/~1admin~1reset-password"
+  },
+  "/admin/change-password": {
+    "$ref": "./admin/auth.json#/~1admin~1change-password"
+  },
+  "/admin/{adminId}/validate-reset-token": {
+    "$ref": "./admin/auth.json#/~1admin~1{adminId}~1validate-reset-token"
+  },
+  "/admin/profile": {
+    "$ref": "./admin/profile.json#/~1admin~1profile"
+  },
+  "/admin/profile/avatar": {
+    "$ref": "./admin/profile.json#/~1admin~1profile~1avatar"
+  },
+  "/admin/status/{status}": {
+    "$ref": "./admin/listing.json#/~1admin~1status~1{status}"
+  },
+  "/admin/search": {
+    "$ref": "./admin/listing.json#/~1admin~1search"
+  },
+  "/admin/role/{role}": {
+    "$ref": "./admin/listing.json#/~1admin~1role~1{role}"
+  },
+  "/admin/logout": {
+    "$ref": "./admin/logout.json#/~1admin~1logout"
+  },
+  "/deliveries": {
+    "$ref": "./deliveries/crud.json#/~1deliveries"
+  },
+  "/deliveries/{deliveryId}": {
+    "$ref": "./deliveries/crud.json#/~1deliveries~1{deliveryId}"
+  },
+  "/deliveries/status/{status}": {
+    "$ref": "./deliveries/filters.json#/~1deliveries~1status~1{status}"
+  },
+  "/deliveries/admin/{adminId}": {
+    "$ref": "./deliveries/filters.json#/~1deliveries~1admin~1{adminId}"
+  },
+  "/deliveries/personnel/{personnelId}": {
+    "$ref": "./deliveries/filters.json#/~1deliveries~1personnel~1{personnelId}"
+  },
+  "/deliveries/subscriber/{subscriberId}": {
+    "$ref": "./deliveries/filters.json#/~1deliveries~1subscriber~1{subscriberId}"
+  },
+  "/deliveries/zone/{zone}": {
+    "$ref": "./deliveries/filters.json#/~1deliveries~1zone~1{zone}"
+  },
+  "/deliveries/date/{date}": {
+    "$ref": "./deliveries/filters.json#/~1deliveries~1date~1{date}"
+  },
+  "/deliveries/date-range": {
+    "$ref": "./deliveries/filters.json#/~1deliveries~1date-range"
+  },
+  "/deliveries/{deliveryId}/status": {
+    "$ref": "./deliveries/management.json#/~1deliveries~1{deliveryId}~1status"
+  },
+  "/deliveries/{deliveryId}/assign": {
+    "$ref": "./deliveries/management.json#/~1deliveries~1{deliveryId}~1assign"
+  },
+  "/deliveries/{deliveryId}/containers": {
+    "$ref": "./deliveries/management.json#/~1deliveries~1{deliveryId}~1containers"
+  },
+  "/deliveries/{deliveryId}/track": {
+    "$ref": "./deliveries/tracking.json#/~1deliveries~1{deliveryId}~1track"
+  },
+  "/deliveries/{deliveryId}/timeline": {
+    "$ref": "./deliveries/tracking.json#/~1deliveries~1{deliveryId}~1timeline"
+  },
+  "/deliveries/stats": {
+    "$ref": "./deliveries/analytics.json#/~1deliveries~1stats"
+  },
+  "/deliveries/performance": {
+    "$ref": "./deliveries/analytics.json#/~1deliveries~1performance"
+  },
+  "/deliveries/bulk-assign": {
+    "$ref": "./deliveries/bulk.json#/~1deliveries~1bulk-assign"
+  },
+  "/deliveries/bulk-status": {
+    "$ref": "./deliveries/bulk.json#/~1deliveries~1bulk-status"
+  },
+  "/deliveries/schedule": {
+    "$ref": "./deliveries/scheduling.json#/~1deliveries~1schedule"
+  },
+  "/deliveries/schedule/{scheduleId}": {
+    "$ref": "./deliveries/scheduling.json#/~1deliveries~1schedule~1{scheduleId}"
+  },
+  "/deliveries/efficiency/personnel": {
+    "$ref": "./deliveries/delivery-efficiency-personnel.json"
+  },
+  "/deliveries/admin/{adminId}/date": {
+    "$ref": "./deliveries/deliveries-by-admin-date.json"
+  },
+  "/deliveries/admin/{adminId}/statistics": {
+    "$ref": "./deliveries/admin-delivery-statistics.json"
+  },
+  "/deliveries/subscription/{subscriptionId}": {
+    "$ref": "./deliveries/deliveries-by-subscription.json"
+  },
+  "/deliveries/subscriber/{subscriberId}/summary": {
+    "$ref": "./deliveries/subscriber-delivery-summary.json"
+  },
+  "/deliveries/personnel/{personnelId}/payment-report": {
+    "$ref": "./deliveries/personnel-payment-report.json"
+  },
+  "/deliveries/personnel/{personnelId}/optimize-route": {
+    "$ref": "./deliveries/personnel-optimize-route.json"
+  },
+  "/deliveries/{deliveryId}/subscription": {
+    "$ref": "./deliveries/add-subscription-to-delivery.json"
+  },
+  "/deliveries/{deliveryId}/subscription/{subscriptionId}/fulfillment": {
+    "$ref": "./deliveries/update-subscription-fulfillment.json"
+  },
+  "/deliveries/{deliveryId}/container/delivered": {
+    "$ref": "./deliveries/add-delivered-container.json"
+  },
+  "/deliveries/{deliveryId}/container/returned": {
+    "$ref": "./deliveries/add-returned-container.json"
+  },
+  "/deliveries/{deliveryId}/container/{containerId}/condition": {
+    "$ref": "./deliveries/update-container-condition.json"
+  },
+  "/deliveries/{deliveryId}/container/{containerId}/verify": {
+    "$ref": "./deliveries/verify-container.json"
+  },
+  "/deliveries/{deliveryId}/containers/delivered/get": {
+    "$ref": "./deliveries/delivered-containers.json"
+  },
+  "/deliveries/{deliveryId}/containers/returned/get": {
+    "$ref": "./deliveries/returned-containers.json"
+  },
+  "/deliveries/{deliveryId}/in-transit": {
+    "$ref": "./deliveries/mark-in-transit.json"
+  },
+  "/deliveries/{deliveryId}/delivered": {
+    "$ref": "./deliveries/mark-delivered.json"
+  },
+  "/deliveries/{deliveryId}/partial": {
+    "$ref": "./deliveries/mark-partial.json"
+  },
+  "/deliveries/{deliveryId}/cancel": {
+    "$ref": "./deliveries/cancel-delivery.json"
+  },
+  "/deliveries/{deliveryId}/verification/method": {
+    "$ref": "./deliveries/update-verification-method.json"
+  },
+  "/deliveries/{deliveryId}/verification/data": {
+    "$ref": "./deliveries/set-verification-data.json"
+  },
+  "/deliveries/{deliveryId}/verification/signature": {
+    "$ref": "./deliveries/verify-with-signature.json"
+  },
+  "/deliveries/{deliveryId}/verification/photo": {
+    "$ref": "./deliveries/verify-with-photo.json"
+  },
+  "/deliveries/{deliveryId}/verification/code": {
+    "$ref": "./deliveries/verify-with-code.json"
+  },
+  "/deliveries/{deliveryId}/payment": {
+    "$ref": "./deliveries/update-payment-status.json"
+  },
+  "/deliveries/{deliveryId}/notes/subscriber": {
+    "$ref": "./deliveries/update-subscriber-notes.json"
+  },
+  "/deliveries/{deliveryId}/notes/personnel": {
+    "$ref": "./deliveries/update-personnel-notes.json"
+  },
+  "/deliveries/{deliveryId}/notes": {
+    "$ref": "./deliveries/update-delivery-notes.json"
+  },
+  "/deliveries/{deliveryId}/containers/delivered/update": {
+    "$ref": "./deliveries/update-containers-delivered.json"
+  },
+  "/deliveries/{deliveryId}/containers/returned/update": {
+    "$ref": "./deliveries/update-containers-returned.json"
+  },
+  "/deliveries/{deliveryId}/route-order": {
+    "$ref": "./deliveries/update-route-order.json"
+  },
+  "/deliveries/{deliveryId}/distance": {
+    "$ref": "./deliveries/update-delivery-distance.json"
+  },
+  "/subscriptions": {
+    "$ref": "./subscriptions/crud.json#/~1subscriptions"
+  },
+  "/subscriptions/{subscriptionId}": {
+    "$ref": "./subscriptions/crud.json#/~1subscriptions~1{subscriptionId}"
+  },
+  "/subscriptions/bulk": {
+    "$ref": "./subscriptions/bulk.json#/~1subscriptions~1bulk"
+  },
+  "/subscriptions/subscriber/{subscriberId}": {
+    "$ref": "./subscriptions/query.json#/~1subscriptions~1subscriber~1{subscriberId}"
+  },
+  "/subscriptions/item/{itemId}": {
+    "$ref": "./subscriptions/query.json#/~1subscriptions~1item~1{itemId}"
+  },
+  "/subscriptions/status/{status}": {
+    "$ref": "./subscriptions/status.json#/~1subscriptions~1status~1{status}"
+  },
+  "/subscriptions/{subscriptionId}/status": {
+    "$ref": "./subscriptions/status.json#/~1subscriptions~1{subscriptionId}~1status"
+  },
+  "/subscriptions/{subscriptionId}/pause": {
+    "$ref": "./subscriptions/status.json#/~1subscriptions~1{subscriptionId}~1pause"
+  },
+  "/subscriptions/{subscriptionId}/resume": {
+    "$ref": "./subscriptions/status.json#/~1subscriptions~1{subscriptionId}~1resume"
+  },
+  "/subscriptions/{subscriptionId}/cancel": {
+    "$ref": "./subscriptions/status.json#/~1subscriptions~1{subscriptionId}~1cancel"
+  },
+  "/subscriptions/schedule/next": {
+    "$ref": "./subscriptions/schedule.json#/~1subscriptions~1schedule~1next"
+  },
+  "/subscriptions/{subscriptionId}/schedule": {
+    "$ref": "./subscriptions/schedule.json#/~1subscriptions~1{subscriptionId}~1schedule"
+  },
+  "/subscriptions/{subscriptionId}/containers": {
+    "$ref": "./subscriptions/container.json#/~1subscriptions~1{subscriptionId}~1containers"
+  },
+  "/subscriptions/stats": {
+    "$ref": "./subscriptions/analytics.json#/~1subscriptions~1stats"
+  },
+  "/subscriptions/search": {
+    "$ref": "./subscriptions/filters.json#/~1subscriptions~1search"
+  }
+} 
